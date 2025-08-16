@@ -11,62 +11,213 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        .text-gradient {
+            background-image: linear-gradient(to right, #6EE7B7, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .project-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transform: translateY(0);
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .active-tab {
+            border-bottom-width: 2px;
+            border-color: #3B82F6;
+        }
+        .section-hidden {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <!-- Main content container with padding and max width -->
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+<body class="bg-gray-900 text-gray-200">
+    <!-- Main content container -->
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
         <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-2 tracking-tight">Christopher Alemao</h1>
-            <p class="text-xl sm:text-2xl font-medium text-blue-600">Software Engineer</p>
+        <header class="text-center mb-8">
+            <h1 class="text-5xl sm:text-6xl font-bold mb-2 tracking-tight text-gradient">Christopher Alemao</h1>
+            <p class="text-2xl sm:text-3xl font-medium text-gray-400">Software Engineer | AI & FinTech Enthusiast</p>
         </header>
 
+        <!-- Navigation Bar -->
+        <nav class="bg-gray-800 p-4 rounded-full shadow-lg mb-8">
+            <ul class="flex justify-center space-x-6">
+                <li><button id="about-tab" class="text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none active-tab" onclick="showSection('about')">About</button></li>
+                <li><button id="experience-tab" class="text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" onclick="showSection('experience')">Experience</button></li>
+                <li><button id="projects-tab" class="text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" onclick="showSection('projects')">Projects</button></li>
+                <li><button id="contact-tab" class="text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" onclick="showSection('contact')">Contact</button></li>
+            </ul>
+        </nav>
+
         <!-- About Me Section -->
-        <section class="bg-white p-6 rounded-2xl shadow-lg mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-600 pb-2">About Me</h2>
-            <p class="text-gray-700 leading-relaxed">
-                A highly accomplished and strategic Software Engineer with over a decade of hands-on experience in the design, development, and deployment of secure, high-availability, and scalable enterprise systems. I possess a deep expertise in full-stack architecture, microservices, and complex data-driven applications. My professional focus is on modernizing legacy infrastructure, championing DevOps methodologies, and implementing robust CI/CD pipelines to accelerate product delivery. I am seeking a senior role within a forward-thinking financial institution where I can leverage my passion for building innovative and secure technology solutions that drive business growth.
+        <section id="about" class="bg-gray-800 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
+            <h2 class="text-3xl font-bold mb-4 text-white pb-2 text-gradient">About Me</h2>
+            <p class="text-gray-400 leading-relaxed">
+                A seasoned and strategic Software Engineer with over a decade of hands-on experience in architecting, developing, and deploying secure, high-availability, and scalable enterprise systems. I possess deep expertise in full-stack architecture, microservices, and complex data-driven applications. My professional focus is on modernizing legacy infrastructure, championing DevOps methodologies, and implementing robust CI/CD pipelines to accelerate product delivery. I am seeking a senior role within a forward-thinking financial institution to leverage a passion for building innovative and secure technology solutions that drive business growth.
             </p>
         </section>
 
-        <!-- Projects Section -->
-        <section class="bg-white p-6 rounded-2xl shadow-lg mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-600 pb-2">Projects</h2>
-
-            <!-- Fin-Viz Dashboard Project -->
-            <div class="mb-6 border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Fin-Viz Dashboard</h3>
-                <p class="text-gray-600 font-medium text-sm mb-2">Full-Stack Web Application</p>
-                <ul class="list-disc list-inside space-y-2 text-gray-700">
-                    <li>Architected and developed a full-stack financial data visualization dashboard for tracking real-time stock and cryptocurrency performance, built on a secure MERN (MongoDB, Express, React, Node.js) stack.</li>
-                    <li>Implemented a robust data fetching service from multiple third-party APIs (e.g., Alpha Vantage) with an intelligent caching layer and exponential backoff retry mechanism to ensure performance and reduce API call costs by over 30%.</li>
-                    <li>Designed and built a modular, responsive front end with React, leveraging charting libraries like Recharts to create dynamic, interactive visualizations of financial trends, enhancing user engagement and data comprehension.</li>
-                    <li>Established a secure, production-ready user authentication system using JWTs (JSON Web Tokens) and implemented role-based access control to protect sensitive user data and ensure privacy.</li>
+        <!-- Experience Section (Initially hidden) -->
+        <section id="experience" class="bg-gray-800 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700 section-hidden">
+            <h2 class="text-3xl font-bold mb-4 text-white pb-2 text-gradient">Experience</h2>
+            <!-- Lead Software Developer -->
+            <div class="mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <h3 class="text-xl font-semibold text-blue-400">Lead Software Developer</h3>
+                    <p class="text-gray-500 font-medium">Health Canada | Feb 2020 – Jan 2024</p>
+                </div>
+                <ul class="text-gray-400 list-disc list-inside space-y-2 text-sm mt-2">
+                    <li>Spearheaded the end-to-end architecture and deployment of a secure, highly-available RESTful API using AWS serverless technologies (Lambda, API Gateway), which scaled to handle over 10,000 concurrent requests with a 99.99% uptime and zero-downtime deployments.</li>
+                    <li>Provided technical leadership in the design and governance of backend microservices, implementing rigorous security protocols and data validation to achieve and maintain full compliance with industry-specific privacy and security regulations (e.g., PIPEDA, PHIPA).</li>
+                    <li>Championed the adoption of a fully automated enterprise CI/CD pipeline using Jenkins and Docker, which reduced deployment times by over 40% and enabled a culture of continuous integration and quality assurance.</li>
+                    <li>Led a key modernization initiative to re-platform mission-critical legacy applications to a modern service-oriented architecture, a project that significantly improved system scalability, optimized performance by 25%, and established a foundation for future feature expansion.</li>
+                </ul>
+            </div>
+            <!-- Junior Software Developer -->
+            <div class="mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <h3 class="text-xl font-semibold text-blue-400">Junior Software Developer</h3>
+                    <p class="text-gray-500 font-medium">Safran Landing Systems | Jan 2018 – Jan 2020</p>
+                </div>
+                <ul class="text-gray-400 list-disc list-inside space-y-2 text-sm mt-2">
+                    <li>Developed and optimized a customer-facing Single Page Application (SPA) using React, leveraging reusable component libraries and advanced state management with Redux Toolkit to deliver a seamless and intuitive user experience for over 5,000 daily active users.</li>
+                    <li>Engineered robust backend functionalities and complex database interactions, including the design of optimized schemas and the writing of sophisticated SQL queries for MySQL, as well as efficient key structures for NoSQL data using DynamoDB.</li>
+                    <li>Actively drove team productivity within an Agile/Scrum framework, building and managing CI/CD pipelines (GitLab CI) and comprehensive automated test suites to accelerate the delivery of high-quality, production-ready code.</li>
+                    <li>Executed critical performance optimizations on build processes and application code, which resulted in a 40% reduction in build times and a measurable enhancement of overall developer workflow and efficiency across the team.</li>
+                </ul>
+            </div>
+            <!-- Software Engineering Intern -->
+            <div class="mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <h3 class="text-xl font-semibold text-blue-400">Software Engineering Intern</h3>
+                    <p class="text-gray-500 font-medium">Google | May 2017 – Aug 2017</p>
+                </div>
+                <ul class="text-gray-400 list-disc list-inside space-y-2 text-sm mt-2">
+                    <li>Contributed to the development of a large-scale internal tool, building and optimizing features with C++ and Python to improve data processing efficiency by 15%.</li>
+                    <li>Participated in a fast-paced Agile team, writing unit tests and performing code reviews to ensure code quality and system stability within a large monorepo.</li>
+                    <li>Gained hands-on experience with internal cloud infrastructure and distributed systems, working with senior engineers to diagnose and fix production-level bugs.</li>
+                </ul>
+            </div>
+            <!-- Independent Cloud Consultant -->
+            <div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <h3 class="text-xl font-semibold text-blue-400">Independent Cloud Consultant</h3>
+                    <p class="text-gray-500 font-medium">Private Equity Firm | May 2016 – Aug 2016</p>
+                </div>
+                <ul class="text-gray-400 list-disc list-inside space-y-2 text-sm mt-2">
+                    <li>Architected and deployed secure data pipelines on AWS and GCP, migrating on-premise financial datasets to the cloud to enable real-time analytics for investment decision-making.</li>
+                    <li>Developed custom ETL processes using Python and serverless functions (e.g., AWS Lambda, GCP Cloud Functions) to automate data ingestion and transformation, reducing processing time by over 30%.</li>
+                    <li>Utilized containerization with Docker and orchestration with Kubernetes to ensure scalability and portability of analytical tools across different cloud environments.</li>
+                    <li>Collaborated with portfolio management teams to design and implement interactive dashboards using Power BI and Tableau, providing key insights into market trends and portfolio performance.</li>
                 </ul>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section class="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-600 pb-2">Contact</h2>
+        <!-- Projects Section (Initially hidden) -->
+        <section id="projects" class="bg-gray-800 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700 section-hidden">
+            <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Featured Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Fin-Viz Dashboard Project -->
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Fin-Viz Dashboard</h3>
+                    <p class="text-gray-500 font-medium text-sm mb-4">Full-Stack Web Application</p>
+                    <p class="text-gray-400 mb-4">Architected and developed a full-stack financial data visualization dashboard for tracking real-time stock and cryptocurrency performance, built on a secure MERN (MongoDB, Express, React, Node.js) stack.</p>
+                    <ul class="text-gray-400 list-inside space-y-2 text-sm">
+                        <li>Implemented a robust data fetching service from third-party APIs with an intelligent caching layer to optimize performance and reduce costs.</li>
+                        <li>Designed a responsive front end with React, leveraging charting libraries like Recharts to create dynamic, interactive visualizations.</li>
+                        <li>Established a secure user authentication system using JWTs and implemented role-based access control.</li>
+                    </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Node.js</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Data Visualization</span>
+                    </div>
+                </div>
+
+                <!-- AI-Driven Financial Prediction Model -->
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">AI-Driven Financial Prediction Model</h3>
+                    <p class="text-gray-500 font-medium text-sm mb-4">Machine Learning & Data Science Project</p>
+                    <p class="text-gray-400 mb-4">Developed a Python-based machine learning model to predict stock market volatility using historical data and sentiment analysis from financial news headlines.</p>
+                    <ul class="text-gray-400 list-inside space-y-2 text-sm">
+                        <li>Engineered and cleaned large datasets using Python and pandas, and built a predictive model with TensorFlow and scikit-learn.</li>
+                        <li>Utilized Natural Language Processing (NLP) to perform sentiment analysis on unstructured text data, providing a key feature for the model.</li>
+                        <li>Deployed the trained model as a RESTful API endpoint on AWS using Flask, allowing for real-time predictions.</li>
+                    </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">TensorFlow</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">NLP</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS</span>
+                    </div>
+                </div>
+
+                <!-- High-Performance Trading System Backend -->
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">High-Performance Trading System</h3>
+                    <p class="text-gray-500 font-medium text-sm mb-4">Low-Latency Backend Development</p>
+                    <p class="text-gray-400 mb-4">Engineered a low-latency backend for a simulated trading platform using a combination of Java for core logic and C++ for critical, performance-sensitive modules.</p>
+                    <ul class="text-gray-400 list-inside space-y-2 text-sm">
+                        <li>Developed a multi-threaded order management system in Java to handle thousands of concurrent transactions with a focus on concurrency control.</li>
+                        <li>Implemented a high-frequency market data parsing engine in C++ to achieve sub-millisecond latency for data ingestion.</li>
+                        <li>Integrated with Kafka for a reliable and scalable messaging queue to process trade executions and market data streams.</li>
+                    </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Java</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C++</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kafka</span>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Microservices</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section (Initially hidden) -->
+        <section id="contact" class="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 section-hidden">
+            <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Contact</h2>
             <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start space-y-4 sm:space-y-0 text-center sm:text-left">
                 <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684L10.25 7l-2.07 2.07a15.02 15.02 0 005.8 5.8l2.07-2.07 3.31-1.28a1 1 0 01.684.948V19a2 2 0 01-2 2h-1c-5.523 0-10-4.477-10-10V5z" />
                     </svg>
-                    <p class="text-gray-700">416 841 3958</p>
+                    <p class="text-gray-400">416 841 3958</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-17 0V19a2 2 0 002 2h14a2 2 0 002-2V8m-18 0l8 5.333M21 8l-8 5.333" />
                     </svg>
-                    <a href="mailto:christopher.alemao@mail.utoronto.ca" class="text-blue-600 hover:underline">christopher.alemao@mail.utoronto.ca</a>
+                    <a href="mailto:christopher.alemao@mail.utoronto.ca" class="text-blue-400 hover:underline">christopher.alemao@mail.utoronto.ca</a>
                 </div>
             </div>
         </section>
 
     </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Get all sections and tabs
+            const sections = document.querySelectorAll('section');
+            const tabs = document.querySelectorAll('nav button');
+
+            // Hide all sections and remove active class from all tabs
+            sections.forEach(section => {
+                section.classList.add('section-hidden');
+            });
+            tabs.forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+
+            // Show the selected section and add active class to the corresponding tab
+            document.getElementById(sectionId).classList.remove('section-hidden');
+            document.getElementById(`${sectionId}-tab`).classList.add('active-tab');
+        }
+    </script>
 </body>
 </html>
