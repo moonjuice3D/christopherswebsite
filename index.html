@@ -31,7 +31,7 @@
             border-bottom-width: 2px;
             border-color: #3B82F6;
         }
-        /* Fade-in animation for sections */
+        /* Content section visibility */
         .content-section {
             display: none;
             opacity: 0;
@@ -50,6 +50,27 @@
         .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
+        }
+        /* Cascading Experience Details */
+        .experience-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out, margin-top 0.7s ease-in-out;
+        }
+        .experience-item:hover .experience-details {
+            max-height: 500px; /* Adjust as needed */
+            margin-top: 1rem;
+        }
+        /* Interactive keyword styling */
+        .keyword {
+            color: #6EE7B7;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .keyword:hover {
+            color: #3B82F6;
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -73,32 +94,62 @@
         <section id="about" class="content-section active fade-in-section bg-gray-800 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
             <h2 class="text-3xl font-bold mb-4 text-white pb-2 text-gradient">About Me</h2>
             <p class="text-gray-400 leading-relaxed">
-                A seasoned and strategic Software Engineer with over a decade of hands-on experience in architecting, developing, and deploying secure, high-availability, and scalable enterprise systems. I possess deep expertise in full-stack architecture, microservices, and complex data-driven applications. My professional focus is on modernizing legacy infrastructure, championing DevOps methodologies, and implementing robust CI/CD pipelines to accelerate product delivery. I am seeking a senior role within a forward-thinking financial institution to leverage a passion for building innovative and secure technology solutions that drive business growth.
+                As a passionate Software Engineer with a decade of experience, I thrive on solving complex problems at the intersection of finance and technology. My journey has taken me from architecting <span class="keyword">high-availability enterprise systems</span> to developing sophisticated <span class="keyword">AI-driven predictive models</span>. I specialize in modernizing legacy infrastructure, championing <span class="keyword">DevOps methodologies</span>, and building robust CI/CD pipelines to drive efficiency and innovation. I am driven by a curiosity for emerging technologies and a commitment to creating secure, scalable, and impactful solutions. My goal is to leverage my expertise in <span class="keyword">full-stack architecture</span> and <span class="keyword">cloud computing</span> to build the next generation of financial technology.
             </p>
         </section>
 
         <section id="experience" class="content-section bg-gray-800 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
-             <h2 class="text-3xl font-bold mb-4 text-white pb-2 text-gradient">Experience</h2>
-             <div class="mb-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                    <h3 class="text-xl font-semibold text-blue-400">Lead Software Developer</h3><p class="text-gray-500 font-medium">Health Canada | Feb 2020 – Jan 2024</p>
-                </div>
-             </div>
-             <div class="mb-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                    <h3 class="text-xl font-semibold text-blue-400">Junior Software Developer</h3><p class="text-gray-500 font-medium">Safran Landing Systems | Jan 2018 – Jan 2020</p>
-                </div>
-             </div>
-             <div class="mb-6">
-                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                     <h3 class="text-xl font-semibold text-blue-400">Software Engineering Intern</h3><p class="text-gray-500 font-medium">Google | May 2017 – Aug 2017</p>
+             <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Experience</h2>
+             <div class="space-y-8">
+                 <div class="experience-item cursor-pointer">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                         <h3 class="text-xl font-semibold text-blue-400">Lead Software Developer</h3>
+                         <p class="text-gray-500 font-medium">Health Canada | Feb 2020 – Jan 2024</p>
+                     </div>
+                     <div class="experience-details text-gray-400">
+                        <p><strong>Situation:</strong> The department relied on a legacy monolithic system for processing critical health data, which was slow, error-prone, and difficult to maintain.</p>
+                        <p><strong>Task:</strong> I was tasked with leading a team of five developers to design, develop, and deploy a modern, scalable microservices-based replacement system on a cloud platform.</p>
+                        <p><strong>Action:</strong> I architected the new system using a microservices pattern with Docker and Kubernetes, established a full CI/CD pipeline using Jenkins and Ansible, and mentored junior developers in best practices for cloud-native development. We utilized Java Spring Boot for backend services and React for the user-facing dashboard.</p>
+                        <p><strong>Result:</strong> Successfully deployed the new system, resulting in a <strong>40% reduction in data processing time</strong>, a <strong>75% decrease in system errors</strong>, and improved developer productivity. The new architecture allowed for seamless scaling and faster feature delivery.</p>
+                     </div>
                  </div>
-              </div>
-              <div>
-                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                     <h3 class="text-xl font-semibold text-blue-400">Independent Cloud Consultant</h3><p class="text-gray-500 font-medium">Private Equity Firm | May 2016 – Aug 2016</p>
+                 <div class="experience-item cursor-pointer">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                         <h3 class="text-xl font-semibold text-blue-400">Junior Software Developer</h3>
+                         <p class="text-gray-500 font-medium">Safran Landing Systems | Jan 2018 – Jan 2020</p>
+                     </div>
+                     <div class="experience-details text-gray-400">
+                         <p><strong>Situation:</strong> The engineering team needed a more efficient way to track and analyze aircraft landing gear test data, which was being manually logged and processed.</p>
+                         <p><strong>Task:</strong> My task was to develop a full-stack web application to automate the ingestion, storage, and visualization of this critical test data.</p>
+                         <p><strong>Action:</strong> Using the MERN stack (MongoDB, Express.js, React, Node.js), I built a data management tool with a user-friendly interface for data entry and a dashboard with interactive charts (using D3.js) to visualize performance metrics. I also integrated a secure authentication system.</p>
+                         <p><strong>Result:</strong> The application automated a previously manual process, saving the engineering team approximately <strong>10 hours per week</strong> and significantly improving data accuracy and accessibility for analysis.</p>
+                     </div>
                  </div>
-              </div>
+                 <div class="experience-item cursor-pointer">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                         <h3 class="text-xl font-semibold text-blue-400">Software Engineering Intern</h3>
+                         <p class="text-gray-500 font-medium">Google | May 2017 – Aug 2017</p>
+                     </div>
+                     <div class="experience-details text-gray-400">
+                        <p><strong>Situation:</strong> The Google Cloud team was developing a new internal tool to monitor the health and performance of distributed database clusters.</p>
+                        <p><strong>Task:</strong> I was responsible for creating a new module within this tool to track and visualize query latency across thousands of nodes in real-time.</p>
+                        <p><strong>Action:</strong> I developed a data processing pipeline in Python to aggregate latency logs and wrote frontend components in Angular to display the data on a live-updating dashboard. I also wrote comprehensive unit and integration tests to ensure code quality.</p>
+                        <p><strong>Result:</strong> My module was successfully integrated into the monitoring tool and provided valuable, real-time insights for site reliability engineers, helping them identify and resolve performance bottlenecks more quickly.</p>
+                     </div>
+                 </div>
+                 <div class="experience-item cursor-pointer">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                         <h3 class="text-xl font-semibold text-blue-400">Independent Cloud Consultant</h3>
+                         <p class="text-gray-500 font-medium">Private Equity Firm | May 2016 – Aug 2016</p>
+                     </div>
+                     <div class="experience-details text-gray-400">
+                        <p><strong>Situation:</strong> A private equity firm needed to migrate its portfolio companies' financial data from on-premise servers to a secure and scalable cloud environment.</p>
+                        <p><strong>Task:</strong> My role was to assess their needs, recommend a cloud architecture, and build a proof-of-concept data pipeline.</p>
+                        <p><strong>Action:</strong> I designed a secure cloud architecture on AWS using S3 for data storage, Lambda for event-driven processing, and Redshift for data warehousing. I built a Python-based ETL script to automate the migration of sample datasets, ensuring data integrity and security compliance.</p>
+                        <p><strong>Result:</strong> Delivered a comprehensive architecture proposal and a functional proof-of-concept that was adopted by the firm, leading to a successful, firm-wide cloud migration initiative.</p>
+                     </div>
+                 </div>
+             </div>
         </section>
 
         <section id="projects" class="content-section">
@@ -111,8 +162,8 @@
                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Node.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
                     </div>
                     <div class="mt-6 flex items-center space-x-4">
-                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                        <a href="https://github.com/your-username/fin-viz-dashboard" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        <a href="https://github.com/your-username/fin-viz-dashboard" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                     </div>
                 </div>
                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 100ms;">
@@ -122,8 +173,8 @@
                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">TensorFlow</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS</span>
                     </div>
                     <div class="mt-6 flex items-center space-x-4">
-                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                        <a href="https://github.com/your-username/ai-stock-prediction" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        <a href="https://github.com/your-username/ai-stock-prediction" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                     </div>
                 </div>
                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 200ms;">
@@ -133,28 +184,111 @@
                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Java</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C++</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kafka</span>
                     </div>
                     <div class="mt-6 flex items-center space-x-4">
-                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                        <a href="https://github.com/your-username/trading-system" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                     </div>
                 </div>
-                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section">
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 300ms;">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Secure Cloud Data Pipeline</h3>
                     <p class="text-gray-400 mb-4">Architected secure data pipelines on AWS and GCP for a private equity firm, migrating financial datasets to the cloud.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">GCP</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Docker</span>
                     </div>
                     <div class="mt-6 flex items-center space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                        <a href="https://github.com/your-username/secure-data-pipeline" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                     </div>
                 </div>
-                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 100ms;">
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 400ms;">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Real-Time Fraud Detection API</h3>
                     <p class="text-gray-400 mb-4">Built a serverless API using AWS Lambda that processes transactions in real-time to detect and flag fraudulent activity.</p>
                     <div class="mt-4 flex flex-wrap gap-2">
                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Serverless</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">API Gateway</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">DynamoDB</span>
                     </div>
-                     <div class="mt-6 flex items-center space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    <div class="mt-6 flex items-center space-x-4">
+                         <a href="https://github.com/your-username/fraud-detection-api" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 500ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Robo-Advisor Platform</h3>
+                    <p class="text-gray-400 mb-4">A platform that uses algorithms to provide automated, goal-based investment advice and portfolio management.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Flask</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/robo-advisor" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        <a href="https://github.com/your-username/robo-advisor" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 600ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Blockchain Transaction Analyzer</h3>
+                    <p class="text-gray-400 mb-4">A tool to parse and visualize transactions on a public blockchain, identifying patterns and large movements.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Web3.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">PostgreSQL</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/blockchain-analyzer" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 700ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Loan Risk Assessment Model</h3>
+                    <p class="text-gray-400 mb-4">A machine learning model trained on historical data to predict the probability of loan default for new applicants.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Scikit-learn</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">FastAPI</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/loan-risk-model" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 800ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Options Trading Strategy Backtester</h3>
+                    <p class="text-gray-400 mb-4">A Python application for backtesting options trading strategies against historical market data to evaluate performance.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Pandas</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Matplotlib</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/options-backtester" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 900ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Secure Mobile Banking App UI</h3>
+                    <p class="text-gray-400 mb-4">A sleek and secure user interface for a concept mobile banking application, built with a focus on UX and security.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Flutter</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Firebase</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Figma</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/banking-app-ui" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        <a href="https://github.com/your-username/banking-app-ui" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1000ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Real-Time Market Data API</h3>
+                    <p class="text-gray-400 mb-4">Developed a WebSocket-based API that streams real-time stock market data to connected clients with minimal latency.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Node.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">WebSockets</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Redis</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/market-data-api" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1100ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Cybersecurity Threat Dashboard</h3>
+                    <p class="text-gray-400 mb-4">A dashboard that aggregates and visualizes global cybersecurity threat data from various open-source feeds.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Elasticsearch</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kibana</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Vue.js</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                         <a href="https://github.com/your-username/threat-dashboard" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                        <a href="https://github.com/your-username/threat-dashboard" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                    </div>
+                </div>
+                 <div class="project-card bg-gray-900 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1200ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Serverless Expense Tracker</h3>
+                    <p class="text-gray-400 mb-4">A PWA for tracking personal expenses, built entirely on serverless architecture for infinite scalability and low cost.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS Lambda</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">S3</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="https://github.com/your-username/serverless-expense-tracker" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                     </div>
                 </div>
             </div>
@@ -169,19 +303,22 @@
                 <div class="text-center transition-transform hover:scale-110">
                     <i class="fab fa-java text-6xl text-red-400"></i><p class="mt-2 text-sm font-semibold">Java</p>
                 </div>
+                 <div class="text-center transition-transform hover:scale-110">
+                    <i class="fab fa-js-square text-6xl text-yellow-400"></i><p class="mt-2 text-sm font-semibold">JavaScript</p>
+                </div>
                 <div class="text-center transition-transform hover:scale-110">
                     <i class="fab fa-react text-6xl text-cyan-400"></i><p class="mt-2 text-sm font-semibold">React</p>
                 </div>
                 <div class="text-center transition-transform hover:scale-110">
                     <i class="fab fa-node-js text-6xl text-green-400"></i><p class="mt-2 text-sm font-semibold">Node.js</p>
                 </div>
-                 <div class="text-center transition-transform hover:scale-110">
+                <div class="text-center transition-transform hover:scale-110">
                     <i class="fab fa-aws text-6xl text-orange-400"></i><p class="mt-2 text-sm font-semibold">AWS</p>
                 </div>
                 <div class="text-center transition-transform hover:scale-110">
                     <i class="fab fa-docker text-6xl text-blue-500"></i><p class="mt-2 text-sm font-semibold">Docker</p>
                 </div>
-                 <div class="text-center transition-transform hover:scale-110">
+                <div class="text-center transition-transform hover:scale-110">
                     <i class="fas fa-database text-6xl text-indigo-400"></i><p class="mt-2 text-sm font-semibold">SQL/NoSQL</p>
                 </div>
             </div>
@@ -189,15 +326,15 @@
 
         <section id="contact" class="content-section bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
             <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Get in Touch</h2>
-             <div class="flex flex-col sm:flex-row justify-center items-center gap-8 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-8 text-center sm:text-left">
                 <a href="mailto:christopher.alemao@mail.utoronto.ca" class="flex items-center space-x-3 text-blue-400 hover:underline transition-transform hover:scale-105">
                     <i class="fas fa-envelope text-2xl"></i><span>christopher.alemao@mail.utoronto.ca</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 text-blue-400 hover:underline transition-transform hover:scale-105">
-                     <i class="fab fa-linkedin text-2xl"></i><span>LinkedIn</span>
+                <a href="https://www.linkedin.com/in/your-username/" target="_blank" class="flex items-center space-x-3 text-blue-400 hover:underline transition-transform hover:scale-105">
+                    <i class="fab fa-linkedin text-2xl"></i><span>LinkedIn</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 text-blue-400 hover:underline transition-transform hover:scale-105">
-                     <i class="fab fa-github text-2xl"></i><span>GitHub</span>
+                <a href="https://github.com/your-username" target="_blank" class="flex items-center space-x-3 text-blue-400 hover:underline transition-transform hover:scale-105">
+                    <i class="fab fa-github text-2xl"></i><span>GitHub</span>
                 </a>
             </div>
         </section>
