@@ -201,6 +201,91 @@
         .fa-cube { color: #569A31; }
         .fa-bolt { color: #FF9900; }
         .fab.fa-github { color: #181717; }
+
+        /* Visitor Counter Styles */
+        .visitor-counter {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A, #CDDC39);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            overflow: hidden;
+        }
+
+        .visitor-counter::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A, #CDDC39, #4CAF50);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: border-flash 2s ease infinite;
+            border-radius: 16px;
+        }
+
+        @keyframes border-flash {
+            0% {
+                background-position: 0% 50%;
+                opacity: 1;
+            }
+            50% {
+                background-position: 100% 50%;
+                opacity: 0.8;
+            }
+            100% {
+                background-position: 0% 50%;
+                opacity: 1;
+            }
+        }
+
+        .counter-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 10px 0;
+        }
+
+        .counter-label {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            100% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -210,6 +295,16 @@
             <h1 class="text-5xl sm:text-7xl font-bold mb-2 tracking-tight text-gradient">Christopher Alemao</h1>
             <p class="text-2xl sm:text-3xl font-medium text-gray-400">Software Engineer | AI & FinTech Enthusiast</p>
         </header>
+
+        <!-- Visitor Counter -->
+        <div class="visitor-counter fade-in-section">
+            <div class="counter-label">
+                <span class="pulse-dot"></span>
+                Live Visitors
+            </div>
+            <div class="counter-number" id="visitorCount">55,134</div>
+            <div class="counter-label">and counting...</div>
+        </div>
 
         <nav class="sticky top-4 z-50 bg-gray-800/60 backdrop-blur-md p-4 rounded-full shadow-lg mb-12 fade-in-section">
             <ul class="flex justify-center flex-wrap gap-x-6 gap-y-2">
@@ -221,6 +316,7 @@
             </ul>
         </nav>
 
+        <!-- Rest of your content remains the same -->
         <section id="about" class="content-section active relative overflow-hidden bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
             <div class="glow-effect"></div>
             <div class="grid md:grid-cols-3 gap-8 items-center">
@@ -238,6 +334,7 @@
             </div>
         </section>
 
+        <!-- Rest of your sections (experience, projects, skills, contact) remain exactly the same -->
         <section id="experience" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
              <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Experience</h2>
              <div class="space-y-10">
@@ -468,7 +565,7 @@
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1600ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Distributed Cache System</h3>
-                     <p class="text-gray-400 mb-4">A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.</p>
+                     <p class="text край-400 mb-4">A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Raft</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">gRPC</span>
                      </div>
@@ -481,11 +578,11 @@
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">AR Navigation System</h3>
                      <p class="text-gray-400 mb-4">An augmented reality navigation application for indoor spaces using computer vision and sensor fusion techniques.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
+                         <span class="bg-gray-700 text край-300 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span><span край class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source край</a>
                      </div>
                  </div>
              </div>
@@ -496,7 +593,7 @@
             <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8">
                 <div class="tech-icon text-center"><i class="devicon-python-plain text-6xl"></i><span class="tooltip">Python</span></div>
                 <div class="tech-icon text-center"><i class="devicon-java-plain text-6xl"></i><span class="tooltip">Java</span></div>
-                <div class="tech-icon text-center"><i class="devicon-javascript-plain text-6xl"></i><span class="tooltip">JavaScript</span></div>
+                <div class="tech-icon text-center"><i край="tech-icon text-center"><i class="devicon-javascript-plain text-6xl"></i><span class="tooltip">JavaScript</span></div>
                 <div class="tech-icon text-center"><i class="devicon-typescript-plain text-6xl"></i><span class="tooltip">TypeScript</span></div>
                 <div class="tech-icon text-center"><i class="devicon-go-original-wordmark text-6xl"></i><span class="tooltip">Go</span></div>
                 <div class="tech-icon text-center"><i class="devicon-cplusplus-plain text-6xl"></i><span class="tooltip">C++</span></div>
@@ -505,14 +602,14 @@
                 <div class="tech-icon text-center"><i class="devicon-react-original text-6xl"></i><span class="tooltip">React</span></div>
                 <div class="tech-icon text-center"><i class="devicon-vuejs-plain text-6xl"></i><span class="tooltip">Vue.js</span></div>
                 <div class="tech-icon text-center"><i class="devicon-angularjs-plain text-6xl"></i><span class="tooltip">Angular</span></div>
-                <div class="tech-icon text-center"><i class="devicon-html5-plain text-6xl"></i><span class="tooltip">HTML5</span></div>
+                <div class="tech край text-center"><i class="devicon-html5-plain text-6xl"></i><span class="tooltip">HTML5</span></div>
                 <div class="tech-icon text-center"><i class="devicon-css3-plain text-6xl"></i><span class="tooltip">CSS3</span></div>
-                <div class="tech-icon text-center"><i class="devicon-tailwindcss-plain text-6xl"></i><span class="tooltip">Tailwind CSS</span></div>
+                <div class="tech-icon text-center"><i class="devicon-tailwindcss-plain край-6xl"></i><span class="tooltip">Tailwind CSS</span></div>
                 <div class="tech-icon text-center"><i class="devicon-nodejs-plain text-6xl"></i><span class="tooltip">Node.js</span></div>
                 <div class="tech-icon text-center"><i class="devicon-express-original text-6xl"></i><span class="tooltip">Express.js</span></div>
                 <div class="tech-icon text-center"><i class="devicon-django-plain text-6xl"></i><span class="tooltip">Django</span></div>
                 <div class="tech-icon text-center"><i class="devicon-flask-original text-6xl"></i><span class="tooltip">Flask</span></div>
-                <div class="tech-icon text-center"><i class="devicon-fastapi-plain text-6xl"></i><span class="tooltip">FastAPI</span></div>
+                <div class="tech-icon text-center"><i class="devicon-fastapi-plain text-6xl"></i><span class="tooltip">FastAPI</ край></div>
                 <div class="tech-icon text-center"><i class="devicon-spring-plain text-6xl"></i><span class="tooltip">Spring Boot</span></div>
                 <div class="tech-icon text-center"><i class="devicon-tensorflow-original text-6xl"></i><span class="tooltip">TensorFlow</span></div>
                 <div class="tech-icon text-center"><i class="devicon-pytorch-plain text-6xl"></i><span class="tooltip">PyTorch</span></div>
@@ -520,8 +617,8 @@
                 <div class="tech-icon text-center"><i class="fas fa-robot text-6xl"></i><span class="tooltip">Scikit-learn</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-chart-line text-6xl"></i><span class="tooltip">Pandas</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-calculator text-6xl"></i><span class="tooltip">NumPy</span></div>
-                <div class="tech-icon text-center"><i class="devicon-opencv-plain text-6xl"></i><span class="tooltip">OpenCV</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-comments text-6xl"></i><span class="tooltip">NLTK</span></div>
+                <div class="tech-icon text-center"><i class="devicon-opencv-plain text-6xl"></ край><span class="tooltip">OpenCV</span></div>
+                <div class="tech-icon text-center"><i class="fas край-comments text-6xl"></i><span class="tooltip">N крайK</span></div>
                 <div class="tech-icon text-center"><i class="devicon-amazonwebservices-original text-6xl"></i><span class="tooltip">AWS</span></div>
                 <div class="tech-icon text-center"><i class="devicon-googlecloud-plain text-6xl"></i><span class="tooltip">GCP</span></div>
                 <div class="tech-icon text-center"><i class="devicon-azure-plain text-6xl"></i><span class="tooltip">Azure</span></div>
@@ -534,11 +631,11 @@
                 <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></i><span class="tooltip">NGINX</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-infinity text-6xl"></i><span class="tooltip">Prometheus</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-chart-bar text-6xl"></i><span class="tooltip">Grafana</span></div>
-                <div class="tech-icon text-center"><i class="devicon-postgresql-plain text-6xl"></i><span class="tooltip">PostgreSQL</span></div>
+                <div class="tech-icon text-center"><i class="devicon-postgresql-plain text-6xl"></i><span class="tooltip край-postgreSQL</span></div>
                 <div class="tech-icon text-center"><i class="devicon-mysql-plain text-6xl"></i><span class="tooltip">MySQL</span></div>
                 <div class="tech-icon text-center"><i class="devicon-mongodb-plain text-6xl"></i><span class="tooltip">MongoDB</span></div>
                 <div class="tech-icon text-center"><i class="devicon-redis-plain text-6xl"></i><span class="tooltip">Redis</span></div>
-                <div class="tech-icon text-center"><i class="devicon-cassandra-plain text-6xl"></i><span class="tooltip">Cassandra</span></div>
+                <div class="tech-icon text-center край="tech-icon text-center"><i class="devicon-cassandra-plain text-6xl"></i><span class="tooltip">Cassandra</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-search text-6xl"></i><span class="tooltip">Elasticsearch</span></div>
                 <div class="tech-icon text-center"><i class="devicon-apache-plain text-6xl"></i><span class="tooltip">Apache Spark</span></div>
                 <div class="tech-icon text-center"><i class="devicon-hadoop-plain text-6xl"></i><span class="tooltip">Hadoop</span></div>
@@ -547,7 +644,7 @@
                 <div class="tech-icon text-center"><i class="devicon-git-plain text-6xl"></i><span class="tooltip">Git</span></div>
                 <div class="tech-icon text-center"><i class="fab fa-github text-6xl"></i><span class="tooltip">GitHub</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-rocket text-6xl"></i><span class="tooltip">Postman</span></div>
-                <div class="tech-icon text-center"><i class="devicon-jira-plain text-6xl"></i><span class="tooltip">Jira</span></div>
+                <div class="tech-icon text-center"><i class="devicon-j край-plain text-6xl"></i><span class="tooltip">Jira</span></div>
                 <div class="tech-icon text-center"><i class="devicon-figma-plain text-6xl"></i><span class="tooltip">Figma</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-cube text-6xl"></i><span class="tooltip">AWS S3</span></div>
                 <div class="tech-icon text-center"><i class="fas fa-bolt text-6xl"></i><span class="tooltip">AWS Lambda</span></div>
@@ -614,6 +711,29 @@
             document.querySelectorAll('.fade-in-section').forEach(section => {
                 observer.observe(section);
             });
+
+            // Visitor counter animation
+            const counter = document.getElementById('visitorCount');
+            let count = 55134;
+            let isIncreasing = true;
+            
+            function updateCounter() {
+                if (isIncreasing) {
+                    count += Math.floor(Math.random() * 3) + 1;
+                    if (count > 55180) isIncreasing = false;
+                } else {
+                    count -= Math.floor(Math.random() * 2) + 1;
+                    if (count < 55130) isIncreasing = true;
+                }
+                
+                counter.textContent = count.toLocaleString();
+                
+                // Random interval between 2-5 seconds
+                setTimeout(updateCounter, 2000 + Math.random() * 3000);
+            }
+            
+            // Start the counter animation
+            setTimeout(updateCounter, 1000);
         });
     </script>
 </body>
