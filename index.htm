@@ -204,14 +204,14 @@
 
         /* Visitor Counter Styles */
         .visitor-counter {
-            background: linear-gradient(135deg, #4CAF50, #8BC34A, #CDDC39);
+            background: linear-gradient(135deg, #3B82F6, #6366F1, #8B5CF6);
             border-radius: 15px;
             padding: 20px;
             margin: 30px auto;
             max-width: 300px;
             text-align: center;
             position: relative;
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
             border: 3px solid transparent;
             background-clip: padding-box;
             overflow: hidden;
@@ -224,7 +224,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, #4CAF50, #8BC34A, #CDDC39, #4CAF50);
+            background: linear-gradient(45deg, #3B82F6, #6366F1, #8B5CF6, #3B82F6);
             background-size: 400% 400%;
             z-index: -1;
             animation: border-flash 2s ease infinite;
@@ -266,7 +266,7 @@
             display: inline-block;
             width: 12px;
             height: 12px;
-            background-color: #4CAF50;
+            background-color: #10B981;
             border-radius: 50%;
             margin-right: 8px;
             animation: pulse 1.5s infinite;
@@ -275,16 +275,37 @@
         @keyframes pulse {
             0% {
                 transform: scale(0.8);
-                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
             }
             70% {
                 transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
             }
             100% {
                 transform: scale(0.8);
-                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
             }
+        }
+
+        /* Tech Stack Categories */
+        .tech-category {
+            margin-bottom: 2rem;
+        }
+        
+        .tech-category h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3B82F6;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3B82F6;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1.5rem;
+            justify-items: center;
         }
     </style>
 </head>
@@ -300,10 +321,9 @@
         <div class="visitor-counter fade-in-section">
             <div class="counter-label">
                 <span class="pulse-dot"></span>
-                Live Visitors
+                Total Visitors To Date
             </div>
             <div class="counter-number" id="visitorCount">55,134</div>
-            <div class="counter-label">and counting...</div>
         </div>
 
         <nav class="sticky top-4 z-50 bg-gray-800/60 backdrop-blur-md p-4 rounded-full shadow-lg mb-12 fade-in-section">
@@ -316,7 +336,6 @@
             </ul>
         </nav>
 
-        <!-- Rest of your content remains the same -->
         <section id="about" class="content-section active relative overflow-hidden bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
             <div class="glow-effect"></div>
             <div class="grid md:grid-cols-3 gap-8 items-center">
@@ -334,7 +353,6 @@
             </div>
         </section>
 
-        <!-- Rest of your sections (experience, projects, skills, contact) remain exactly the same -->
         <section id="experience" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
              <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Experience</h2>
              <div class="space-y-10">
@@ -428,14 +446,14 @@
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></極>Source Code</a>
                      </div>
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 400ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Cloud Migration Toolkit</h3>
                      <p class="text-gray-400 mb-4">An automated tool for migrating on-premise applications to AWS with cost optimization and security compliance checks.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS CDK</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Terraform</span>
+                         <span class="bg-gray-極 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS CDK</span><span class="bg-gray-700 text-gray-300 text-xs font-semib極 px-2.5 py-1 rounded-full">Terraform</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
@@ -445,7 +463,7 @@
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 500ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Real-time Chat Application</h3>
                      <p class="text-gray-400 mb-4">A scalable chat application with WebSocket connections, message persistence, and end-to-end encryption.</p>
-                     <div class="mt-4 flex flex-wrap gap-2">
+                     <極 class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Vue.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Socket.io</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Redis</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
@@ -453,14 +471,14 @@
                          <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
-                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 600ms;">
+                 <div class="project-card bg-gray-800/極 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 600ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">MLOps Pipeline Framework</h3>
                      <p class="text-gray-400 mb-4">End-to-end machine learning operations pipeline with automated training, deployment, and monitoring capabilities.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MLflow</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Prometheus</span>
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MLflow</極><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Prometheus</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
-                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="極-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
                          <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
@@ -475,15 +493,15 @@
                          <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
-                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 800ms;">
-                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Computer Vision API</h3>
+                 <div class="project-card bg-gray-800/50 p-極 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 800ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-極">Computer Vision API</h3>
                      <p class="text-gray-400 mb-4">RESTful API for image recognition and object detection using deep learning models with FastAPI backend.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">FastAPI</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">PyTorch</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">OpenCV</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i極="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 900ms;">
@@ -492,9 +510,9 @@
                      <div class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Spring Boot</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">RabbitMQ</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
                      </div>
-                     <div class="mt-6 flex items-center space-x-4">
+                     <div class="mt-6 flex items極 space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                         <a href="#" class="text-gray-400極:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1000ms;">
@@ -509,17 +527,17 @@
                      </div>
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1100ms;">
-                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Serverless Image Processor</h3>
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Serverless Image Processor</極>
                      <p class="text-gray-400 mb-4">A cloud-native application for processing images on-demand with automatic scaling and cost-effective pricing.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS Lambda</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">S3</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">CloudFront</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab極-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
-                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1200ms;">
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-del極: 1200ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Portfolio Optimizer</h3>
                      <p class="text-gray-400 mb-4">A financial tool that uses modern portfolio theory to optimize investment allocations based on risk tolerance.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
@@ -532,7 +550,7 @@
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1300ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">CI/CD Automation Suite</h3>
-                     <p class="text-gray-400 mb-4">A comprehensive toolset for automating software delivery pipelines with built-in quality gates and security scanning.</p>
+                     <p class="text-gray-400極-4">A comprehensive toolset for automating software delivery pipelines with built-in quality gates and極ecurity scanning.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
                          <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Jenkins</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Docker</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span>
                      </div>
@@ -545,10 +563,10 @@
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Natural Language API</h3>
                      <p class="text-gray-400 mb-4">A service for text analysis including sentiment analysis, entity recognition, and language translation capabilities.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Flask</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">spaCy</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">NLTK</span>
+                         <span class="bg-gray-700 text-gray-300 text-xs極ont-semibold px-2.5 py-1 rounded-full">Flask</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">spaCy</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">NLTK</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
-                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><極 class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
                          <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
@@ -565,12 +583,12 @@
                  </div>
                  <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1600ms;">
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">Distributed Cache System</h3>
-                     <p class="text край-400 mb-4">A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.</p>
+                     <p class="text-gray-400 mb-4">A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Raft</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">gRPC</span>
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5極-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold極-2.5 py-1 rounded-full">Raft</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">gRPC</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
-                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>極e Demo</a>
                          <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
@@ -578,11 +596,11 @@
                      <h3 class="text-xl font-semibold mb-2 text-blue-400">AR Navigation System</h3>
                      <p class="text-gray-400 mb-4">An augmented reality navigation application for indoor spaces using computer vision and sensor fusion techniques.</p>
                      <div class="mt-4 flex flex-wrap gap-2">
-                         <span class="bg-gray-700 text край-300 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span><span край class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
                      </div>
                      <div class="mt-6 flex items-center space-x-4">
                          <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
-                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source край</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
                      </div>
                  </div>
              </div>
@@ -590,66 +608,106 @@
 
         <section id="skills" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
             <h2 class="text-3xl font-bold mb-8 text-white pb-2 text-gradient">My Tech Stack</h2>
-            <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8">
-                <div class="tech-icon text-center"><i class="devicon-python-plain text-6xl"></i><span class="tooltip">Python</span></div>
-                <div class="tech-icon text-center"><i class="devicon-java-plain text-6xl"></i><span class="tooltip">Java</span></div>
-                <div class="tech-icon text-center"><i край="tech-icon text-center"><i class="devicon-javascript-plain text-6xl"></i><span class="tooltip">JavaScript</span></div>
-                <div class="tech-icon text-center"><i class="devicon-typescript-plain text-6xl"></i><span class="tooltip">TypeScript</span></div>
-                <div class="tech-icon text-center"><i class="devicon-go-original-wordmark text-6xl"></i><span class="tooltip">Go</span></div>
-                <div class="tech-icon text-center"><i class="devicon-cplusplus-plain text-6xl"></i><span class="tooltip">C++</span></div>
-                <div class="tech-icon text-center"><i class="devicon-rust-plain text-6xl"></i><span class="tooltip">Rust</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">SQL</span></div>
-                <div class="tech-icon text-center"><i class="devicon-react-original text-6xl"></i><span class="tooltip">React</span></div>
-                <div class="tech-icon text-center"><i class="devicon-vuejs-plain text-6xl"></i><span class="tooltip">Vue.js</span></div>
-                <div class="tech-icon text-center"><i class="devicon-angularjs-plain text-6xl"></i><span class="tooltip">Angular</span></div>
-                <div class="tech край text-center"><i class="devicon-html5-plain text-6xl"></i><span class="tooltip">HTML5</span></div>
-                <div class="tech-icon text-center"><i class="devicon-css3-plain text-6xl"></i><span class="tooltip">CSS3</span></div>
-                <div class="tech-icon text-center"><i class="devicon-tailwindcss-plain край-6xl"></i><span class="tooltip">Tailwind CSS</span></div>
-                <div class="tech-icon text-center"><i class="devicon-nodejs-plain text-6xl"></i><span class="tooltip">Node.js</span></div>
-                <div class="tech-icon text-center"><i class="devicon-express-original text-6xl"></i><span class="tooltip">Express.js</span></div>
-                <div class="tech-icon text-center"><i class="devicon-django-plain text-6xl"></i><span class="tooltip">Django</span></div>
-                <div class="tech-icon text-center"><i class="devicon-flask-original text-6xl"></i><span class="tooltip">Flask</span></div>
-                <div class="tech-icon text-center"><i class="devicon-fastapi-plain text-6xl"></i><span class="tooltip">FastAPI</ край></div>
-                <div class="tech-icon text-center"><i class="devicon-spring-plain text-6xl"></i><span class="tooltip">Spring Boot</span></div>
-                <div class="tech-icon text-center"><i class="devicon-tensorflow-original text-6xl"></i><span class="tooltip">TensorFlow</span></div>
-                <div class="tech-icon text-center"><i class="devicon-pytorch-plain text-6xl"></i><span class="tooltip">PyTorch</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">Keras</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-robot text-6xl"></i><span class="tooltip">Scikit-learn</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-chart-line text-6xl"></i><span class="tooltip">Pandas</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-calculator text-6xl"></i><span class="tooltip">NumPy</span></div>
-                <div class="tech-icon text-center"><i class="devicon-opencv-plain text-6xl"></ край><span class="tooltip">OpenCV</span></div>
-                <div class="tech-icon text-center"><i class="fas край-comments text-6xl"></i><span class="tooltip">N крайK</span></div>
-                <div class="tech-icon text-center"><i class="devicon-amazonwebservices-original text-6xl"></i><span class="tooltip">AWS</span></div>
-                <div class="tech-icon text-center"><i class="devicon-googlecloud-plain text-6xl"></i><span class="tooltip">GCP</span></div>
-                <div class="tech-icon text-center"><i class="devicon-azure-plain text-6xl"></i><span class="tooltip">Azure</span></div>
-                <div class="tech-icon text-center"><i class="devicon-docker-plain text-6xl"></i><span class="tooltip">Docker</span></div>
-                <div class="tech-icon text-center"><i class="devicon-kubernetes-plain text-6xl"></i><span class="tooltip">Kubernetes</span></div>
-                <div class="tech-icon text-center"><i class="devicon-terraform-plain text-6xl"></i><span class="tooltip">Terraform</span></div>
-                <div class="tech-icon text-center"><i class="devicon-ansible-plain text-6xl"></i><span class="tooltip">Ansible</span></div>
-                <div class="tech-icon text-center"><i class="devicon-jenkins-line text-6xl"></i><span class="tooltip">Jenkins</span></div>
-                <div class="tech-icon text-center"><i class="devicon-gitlab-plain text-6xl"></i><span class="tooltip">GitLab CI</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></i><span class="tooltip">NGINX</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-infinity text-6xl"></i><span class="tooltip">Prometheus</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-chart-bar text-6xl"></i><span class="tooltip">Grafana</span></div>
-                <div class="tech-icon text-center"><i class="devicon-postgresql-plain text-6xl"></i><span class="tooltip край-postgreSQL</span></div>
-                <div class="tech-icon text-center"><i class="devicon-mysql-plain text-6xl"></i><span class="tooltip">MySQL</span></div>
-                <div class="tech-icon text-center"><i class="devicon-mongodb-plain text-6xl"></i><span class="tooltip">MongoDB</span></div>
-                <div class="tech-icon text-center"><i class="devicon-redis-plain text-6xl"></i><span class="tooltip">Redis</span></div>
-                <div class="tech-icon text-center край="tech-icon text-center"><i class="devicon-cassandra-plain text-6xl"></i><span class="tooltip">Cassandra</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-search text-6xl"></i><span class="tooltip">Elasticsearch</span></div>
-                <div class="tech-icon text-center"><i class="devicon-apache-plain text-6xl"></i><span class="tooltip">Apache Spark</span></div>
-                <div class="tech-icon text-center"><i class="devicon-hadoop-plain text-6xl"></i><span class="tooltip">Hadoop</span></div>
-                <div class="tech-icon text-center"><i class="devicon-apachekafka-original text-6xl"></i><span class="tooltip">Kafka</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">Hive</span></div>
-                <div class="tech-icon text-center"><i class="devicon-git-plain text-6xl"></i><span class="tooltip">Git</span></div>
-                <div class="tech-icon text-center"><i class="fab fa-github text-6xl"></i><span class="tooltip">GitHub</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-rocket text-6xl"></i><span class="tooltip">Postman</span></div>
-                <div class="tech-icon text-center"><i class="devicon-j край-plain text-6xl"></i><span class="tooltip">Jira</span></div>
-                <div class="tech-icon text-center"><i class="devicon-figma-plain text-6xl"></i><span class="tooltip">Figma</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-cube text-6xl"></i><span class="tooltip">AWS S3</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-bolt text-6xl"></i><span class="tooltip">AWS Lambda</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">AWS SageMaker</span></div>
-                <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></i><span class="tooltip">AWS EC2</span></div>
+            
+            <div class="tech-category">
+                <h3>Programming Languages</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-python-plain text-6xl"></i><span class="tooltip">Python</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-java-plain text-6xl"></i><span class="tooltip">Java</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-javascript-plain text-6xl"></i><span class="tooltip">JavaScript</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-typescript-plain text-6xl"></i><span class="tooltip">TypeScript</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-go-original-wordmark text-6xl"></i><span class="tooltip">Go</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-cplusplus-plain text-6xl"></i><span class="tooltip">C++</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-rust-plain text-6xl"></i><span class="tooltip">Rust</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">SQL</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Frontend Development</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-react-original text-6xl"></i><span class="tooltip">React</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-vuejs-plain text-6xl"></i><span class="tooltip">Vue.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-angularjs-plain text-6xl"></極><span class="tooltip">Angular</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-html5-plain text-6xl"></i><span class="tooltip">HTML5</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-css3-plain text-6xl"></i><span class="tooltip">CSS3</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-tailwindcss-plain text-6xl"></i><span class="tooltip">Tailwind CSS</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Backend Development</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-nodejs-plain text-6xl"></i><span class="tooltip">Node.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-express-original text-6xl"></i><span class="tooltip">Express.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-django-plain text-6xl"></i><span class="tooltip">Django</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-flask-original text-6xl"></i><span class="tooltip">Flask</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-fastapi-plain text-6xl"></i><span class="tooltip">FastAPI</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-spring-plain text-6xl"></i><span class="tooltip">Spring Boot</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>AI & Machine Learning</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-tensorflow-original text-6xl"></i><span class="tooltip">TensorFlow</span></div>
+                    <div class="tech-icon text-center"><極 class="devicon-pytorch-plain text-6xl"></i><span class="tooltip">PyTorch</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">Keras</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-robot text-6xl"></i><span class="tooltip">Scikit-learn</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-chart-line text-6xl"></i><span class="tooltip">Pandas</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-calculator text-6xl"></i><span class="tooltip">NumPy</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-opencv-plain text-6xl"></i><span class="tooltip">OpenCV</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-comments text-6xl"></i><span class="tooltip">NLTK</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Cloud & DevOps</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-amazonwebservices-original text-6xl"></i><span class="tooltip">AWS</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-googlecloud-plain text-6xl"></i><span class="tooltip">GCP</span></div>
+                    <div class="tech-icon text-center"><i class="極vicon-azure-plain text-6xl"></i><span class="tooltip">Azure</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-docker-plain text-極xl"></i><span class="tooltip">Docker</span></極>
+                    <div class="tech-icon text-center"><i class="devicon-kubernetes-plain text-6xl"></i><span class="tooltip">Kubernetes</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-terraform-plain text-6xl"></i><span class="tooltip">Terraform</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-ansible-plain text-6xl"></i><span class="tooltip">Ansible</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-jenkins-line text-6xl"></i><span class="tooltip">Jenkins</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-gitlab-plain text-6xl"></i><span class="tooltip">GitLab CI</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></i><span class="tooltip">NGINX</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-infinity text-6xl"></i><span class="tooltip">Prometheus</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-chart-bar text-6xl"></i><span class="tooltip">Grafana</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Databases</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-postgresql-plain text-6xl"></i><span class="tooltip">PostgreSQL</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-mysql-plain text-6xl"></i><span class="tooltip">MySQL</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-mongodb-plain text-6xl"></i><span class="tooltip">MongoDB</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-redis-plain text-6xl"></i><span class="tooltip">Redis</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-cassandra-plain text-6xl"></i><span class="tooltip">Cassandra</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-search text-6xl"></i><span class="tooltip">Elasticsearch</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-apache-plain text-6xl"></i><span class="tooltip">Apache Spark</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-hadoop-plain text-6xl"></i><span class="tooltip">Hadoop</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-apachekafka-original text-6xl"></i><span class="tooltip">Kafka</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">Hive</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Tools & Others</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-git-plain text-6xl"></i><span class="tooltip">Git</span></div>
+                    <div class="tech-icon text-center"><i class="fab fa-github text-6xl"></i><span class="tooltip">GitHub</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-rocket text-6xl"></i><span class="tooltip">Postman</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-jira-plain text-6xl"></i><span class="tooltip">Jira</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-figma-plain text-6xl"></i><span class="tooltip">Figma</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-cube text-6xl"></i><span class="tooltip">AWS S3</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-bolt text-6xl"></i><span class="tooltip">AWS Lambda</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">AWS SageMaker</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></極><span class="tooltip">AWS EC2</span></div>
+                </div>
             </div>
         </section>
 
@@ -680,7 +738,7 @@
                     // Add active class to clicked tab
                     tab.classList.add('active-tab');
 
-                    const sectionId = tab.getAttribute('data-section');
+                    const sectionId極 tab.getAttribute('data-section');
 
                     // Hide all sections
                     sections.forEach(section => {
@@ -712,28 +770,18 @@
                 observer.observe(section);
             });
 
-            // Visitor counter animation
+            // Visitor counter - static with occasional small updates
             const counter = document.getElementById('visitorCount');
             let count = 55134;
-            let isIncreasing = true;
             
-            function updateCounter() {
-                if (isIncreasing) {
-                    count += Math.floor(Math.random() * 3) + 1;
-                    if (count > 55180) isIncreasing = false;
-                } else {
-                    count -= Math.floor(Math.random() * 2) + 1;
-                    if (count < 55130) isIncreasing = true;
-                }
-                
+            // Format number with commas
+            counter.textContent = count.toLocaleString();
+            
+            // Occasionally add a few visitors
+            setInterval(() => {
+                count += Math.floor(Math.random() * 3) + 1;
                 counter.textContent = count.toLocaleString();
-                
-                // Random interval between 2-5 seconds
-                setTimeout(updateCounter, 2000 + Math.random() * 3000);
-            }
-            
-            // Start the counter animation
-            setTimeout(updateCounter, 1000);
+            }, 60000); // Update every minute
         });
     </script>
 </body>
