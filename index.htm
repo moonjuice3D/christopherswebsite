@@ -3,230 +3,786 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christopher's Website</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Christopher Alemao | Software Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --background-start-rgb: 13, 17, 23;
+            --background-end-rgb: 0, 0, 0;
+            --glow-start-rgb: 59, 130, 246;
+            --glow-end-rgb: 110, 231, 183;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            background: linear-gradient(to bottom,
+                transparent,
+                rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
         }
-        
-        .container {
-            max-width: 1000px;
+
+        .text-gradient {
+            background-image: linear-gradient(to right, #6EE7B7, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Lamborghini Revamp: Added animated glow effect for key sections */
+        .glow-effect::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background-image: radial-gradient(at 20% 20%,
+                rgba(var(--glow-start-rgb), 0.15),
+                transparent 50%),
+            radial-gradient(at 80% 80%,
+                rgba(var(--glow-end-rgb), 0.15),
+                transparent 50%);
+            animation: glow-move 15s infinite;
+        }
+
+        @keyframes glow-move {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, 40px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
         }
         
-        header {
-            background: #2c3e50;
-            color: white;
-            padding: 30px;
-            text-align: center;
+        .project-card, .content-section {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transform: translateY(0);
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-color: #3B82F6;
         }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
+
+        .active-tab {
+            color: #60A5FA;
+            border-bottom-width: 2px;
+            border-color: #3B82F6;
         }
-        
-        .content {
-            padding: 30px;
+
+        .content-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
-        
-        .bookmarks-section {
-            margin-bottom: 30px;
-        }
-        
-        h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-        
-        .bookmarks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .bookmark-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .bookmark-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            border-left-color: #e74c3c;
-        }
-        
-        .bookmark-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            color: #3498db;
-            width: 40px;
-            text-align: center;
-        }
-        
-        .bookmark-content {
-            flex: 1;
-        }
-        
-        .bookmark-title {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .bookmark-link {
-            color: #7f8c8d;
-            text-decoration: none;
-            font-size: 0.9rem;
+        .content-section.active {
             display: block;
+            opacity: 1;
         }
-        
-        .bookmark-link:hover {
-            color: #3498db;
+
+        /* Scroll-triggered fade-in animation */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #3498db, transparent);
-            margin: 30px 0;
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
+
+        /* Interactive keyword styling */
+        .keyword {
+            color: #6EE7B7;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .keyword:hover {
+            color: #3B82F6;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+            cursor: pointer;
+        }
+
+        /* Tech Stack Icon Interactivity */
+        .tech-icon {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .tech-icon:hover {
+            transform: scale(1.15);
+        }
+        .tech-icon:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-100%);
+        }
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background-color: #161b22;
+            color: #c9d1d9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Brand-specific colors for tech icons */
+        .devicon-python-plain { color: #3776AB; }
+        .devicon-java-plain { color: #007396; }
+        .devicon-javascript-plain { color: #F7DF1E; }
+        .devicon-typescript-plain { color: #3178C6; }
+        .devicon-go-original-wordmark { color: #00ADD8; }
+        .devicon-cplusplus-plain { color: #00599C; }
+        .devicon-rust-plain { color: #000000; }
+        .devicon-react-original { color: #61DAFB; }
+        .devicon-vuejs-plain { color: #4FC08D; }
+        .devicon-angularjs-plain { color: #DD0031; }
+        .devicon-html5-plain { color: #E34F26; }
+        .devicon-css3-plain { color: #1572B6; }
+        .devicon-tailwindcss-plain { color: #06B6D4; }
+        .devicon-nodejs-plain { color: #339933; }
+        .devicon-express-original { color: #000000; }
+        .devicon-django-plain { color: #092E20; }
+        .devicon-flask-original { color: #000000; }
+        .devicon-fastapi-plain { color: #009688; }
+        .devicon-spring-plain { color: #6DB33F; }
+        .devicon-tensorflow-original { color: #FF6F00; }
+        .devicon-pytorch-plain { color: #EE4C2C; }
+        .devicon-amazonwebservices-original { color: #232F3E; }
+        .devicon-googlecloud-plain { color: #4285F4; }
+        .devicon-azure-plain { color: #0078D4; }
+        .devicon-docker-plain { color: #2496ED; }
+        .devicon-kubernetes-plain { color: #326CE5; }
+        .devicon-terraform-plain { color: #7B42BC; }
+        .devicon-ansible-plain { color: #EE0000; }
+        .devicon-jenkins-line { color: #D24939; }
+        .devicon-gitlab-plain { color: #FC6D26; }
+        .devicon-postgresql-plain { color: #4169E1; }
+        .devicon-mysql-plain { color: #4479A1; }
+        .devicon-mongodb-plain { color: #47A248; }
+        .devicon-redis-plain { color: #DC382D; }
+        .devicon-cassandra-plain { color: #1287B1; }
+        .devicon-apache-plain { color: #D22128; }
+        .devicon-hadoop-plain { color: #66CCFF; }
+        .devicon-apachekafka-original { color: #231F20; }
+        .devicon-git-plain { color: #F05032; }
+        .devicon-jira-plain { color: #0052CC; }
+        .devicon-figma-plain { color: #F24E1E; }
         
-        footer {
-            text-align: center;
+        /* Custom colors for non-devicon elements */
+        .fa-database { color: #336791; }
+        .fa-brain { color: #D00000; }
+        .fa-robot { color: #FF6384; }
+        .fa-chart-line { color: #150458; }
+        .fa-calculator { color: #4DC0FF; }
+        .fa-comments { color: #079992; }
+        .fa-server { color: #1890FF; }
+        .fa-infinity { color: #E6522C; }
+        .fa-chart-bar { color: #F46800; }
+        .fa-search { color: #005571; }
+        .fa-rocket { color: #FF6B6B; }
+        .fa-cube { color: #569A31; }
+        .fa-bolt { color: #FF9900; }
+        .fab.fa-github { color: #181717; }
+
+        /* Visitor Counter Styles */
+        .visitor-counter {
+            background: linear-gradient(135deg, #3B82F6, #6366F1, #8B5CF6);
+            border-radius: 15px;
             padding: 20px;
-            background: #ecf0f1;
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            margin: 30px auto;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            overflow: hidden;
+        }
+
+        .visitor-counter::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #3B82F6, #6366F1, #8B5CF6, #3B82F6);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: border-flash 2s ease infinite;
+            border-radius: 16px;
+        }
+
+        @keyframes border-flash {
+            0% {
+                background-position: 0% 50%;
+                opacity: 1;
+            }
+            50% {
+                background-position: 100% 50%;
+                opacity: 0.8;
+            }
+            100% {
+                background-position: 0% 50%;
+                opacity: 1;
+            }
+        }
+
+        .counter-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 10px 0;
+        }
+
+        .counter-label {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #10B981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                transform: scale(0.8);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        /* Tech Stack Categories */
+        .tech-category {
+            margin-bottom: 2rem;
         }
         
-        @media (max-width: 768px) {
-            .bookmarks-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
+        .tech-category h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3B82F6;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3B82F6;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1.5rem;
+            justify-items: center;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Christopher's Website</h1>
-            <div class="subtitle">Computer Science & Technology Resources</div>
+<body class="bg-gray-900 text-gray-200">
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+
+        <header class="text-center mb-8 fade-in-section">
+            <h1 class="text-5xl sm:text-7xl font-bold mb-2 tracking-tight text-gradient">Christopher Alemao</h1>
+            <p class="text-2xl sm:text-3xl font-medium text-gray-400">Software Engineer | AI & FinTech Enthusiast</p>
         </header>
-        
-        <div class="content">
-            <section class="bookmarks-section">
-                <h2>Bookmarks</h2>
-                <div class="bookmarks-grid">
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Harvard University Computer Science</div>
-                            <a href="#" class="bookmark-link">https://cs.harvard.edu</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Harvard University Library</div>
-                            <a href="#" class="bookmark-link">https://library.harvard.edu</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Harvard University Admissions</div>
-                            <a href="#" class="bookmark-link">https://admissions.harvard.edu</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-laptop-code"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Computer Science & Engineering</div>
-                            <a href="#" class="bookmark-link">https://cse.harvard.edu</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-researchgate"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Harvard University Research</div>
-                            <a href="#" class="bookmark-link">https://research.harvard.edu</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookmark-card">
-                        <div class="bookmark-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="bookmark-content">
-                            <div class="bookmark-title">Harvard University Events</div>
-                            <a href="#" class="bookmark-link">https://events.harvard.edu</a>
-                        </div>
+
+        <!-- Visitor Counter -->
+        <div class="visitor-counter fade-in-section">
+            <div class="counter-label">
+                <span class="pulse-dot"></span>
+                Total Visitors To Date
+            </div>
+            <div class="counter-number" id="visitorCount">55,134</div>
+        </div>
+
+        <nav class="sticky top-4 z-50 bg-gray-800/60 backdrop-blur-md p-4 rounded-full shadow-lg mb-12 fade-in-section">
+            <ul class="flex justify-center flex-wrap gap-x-6 gap-y-2">
+                <li><button class="tab-btn text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none active-tab" data-section="about">About</button></li>
+                <li><button class="tab-btn text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" data-section="experience">Experience</button></li>
+                <li><button class="tab-btn text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" data-section="projects">Projects</button></li>
+                <li><button class="tab-btn text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" data-section="skills">Tech Stack</button></li>
+                <li><button class="tab-btn text-lg font-semibold py-2 px-4 rounded-full transition-all duration-300 hover:text-blue-400 focus:outline-none" data-section="contact">Contact</button></li>
+            </ul>
+        </nav>
+
+        <section id="about" class="content-section active relative overflow-hidden bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
+            <div class="glow-effect"></div>
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-1 flex justify-center fade-in-section">
+                    <div class="w-48 h-48 rounded-full bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center">
+                        <span class="text-gray-900 text-6xl font-bold">CA</span>
                     </div>
                 </div>
-            </section>
+                <div class="md:col-span-2 fade-in-section" style="transition-delay: 150ms;">
+                    <h2 class="text-3xl font-bold mb-4 text-white pb-2 text-gradient">About Me</h2>
+                    <p class="text-gray-300 leading-relaxed text-lg">
+                        As a passionate Software Engineer with a decade of experience, I thrive on solving complex problems at the intersection of finance and technology. My journey has taken me from architecting <span class="keyword">high-availability enterprise systems</span> to developing sophisticated <span class="keyword">AI-driven predictive models</span>. I specialize in modernizing legacy infrastructure, championing <span class="keyword">DevOps methodologies</span>, and building robust CI/CD pipelines to drive efficiency and innovation. I am driven by a curiosity for emerging technologies and a commitment to creating secure, scalable, and impactful solutions. My goal is to leverage my expertise in <span class="keyword">full-stack architecture</span> and <span class="keyword">cloud computing</span> to build the next generation of financial technology.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
+             <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Experience</h2>
+             <div class="space-y-10">
+                 <div class="fade-in-section">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                         <h3 class="text-xl font-semibold text-blue-400">Lead Software Developer</h3>
+                         <p class="text-gray-500 font-medium">Health Canada | Feb 2020 – Jan 2024</p>
+                     </div>
+                     <ul class="list-disc list-inside text-gray-400 space-y-2 pl-2">
+                         <li>Spearheaded the design and deployment of a cloud-native microservices architecture using Docker and Kubernetes, replacing a slow and error-prone legacy system.</li>
+                         <li>Established a full CI/CD pipeline with Jenkins and Ansible, which accelerated feature delivery cycles and improved developer productivity.</li>
+                         <li>Achieved a <strong>40% reduction in data processing time</strong> and a <strong>75% decrease in system errors</strong>, significantly enhancing the reliability of critical health data processing.</li>
+                     </ul>
+                 </div>
+                 <div class="fade-in-section">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                         <h3 class="text-xl font-semibold text-blue-400">Junior Software Developer</h3>
+                         <p class="text-gray-500 font-medium">Safran Landing Systems | Jan 2018 – Jan 2020</p>
+                     </div>
+                     <ul class="list-disc list-inside text-gray-400 space-y-2 pl-2">
+                        <li>Developed a full-stack MERN (MongoDB, Express, React, Node.js) web application to automate the tracking and analysis of aircraft landing gear test data.</li>
+                        <li>Implemented an interactive dashboard with D3.js, enabling engineers to visualize performance metrics and identify trends more effectively.</li>
+                        <li>The new tool automated a previously manual process, saving the engineering team an estimated <strong>10 hours per week</strong> and improving data accuracy.</li>
+                     </ul>
+                 </div>
+                 <div class="fade-in-section">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                         <h3 class="text-xl font-semibold text-blue-400">Tax Preparation Assistant</h3>
+                         <p class="text-gray-500 font-medium">Intuit | Jan 2018 – Apr 2018</p>
+                     </div>
+                      <ul class="list-disc list-inside text-gray-400 space-y-2 pl-2">
+                        <li>Prepared over 150 individual T1 tax returns with 99% accuracy using Intuit ProConnect and QuickBooks during the high-volume tax season.</li>
+                        <li>Analyzed and organized client financial documents, identifying and resolving discrepancies to ensure compliance and accuracy.</li>
+                        <li>Contributed to a <strong>15% increase in team processing capacity</strong> during peak season, ensuring all clients met their filing deadlines.</li>
+                     </ul>
+                 </div>
+                 <div class="fade-in-section">
+                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                         <h3 class="text-xl font-semibold text-blue-400">Election Officer</h3>
+                         <p class="text-gray-500 font-medium">Elections Canada | Oct 2015</p>
+                     </div>
+                     <ul class="list-disc list-inside text-gray-400 space-y-2 pl-2">
+                        <li>Managed the voter verification and ballot distribution process for over 500 voters during the federal election, ensuring adherence to strict legal protocols.</li>
+                        <li>Provided clear instructions and assistance to voters, maintaining a smooth and efficient flow at the polling station and minimizing wait times.</li>
+                        <li>Assisted in the secure closing of the poll and the meticulous counting of ballots, contributing to a process with zero spoiled ballots due to administrative error.</li>
+                     </ul>
+                 </div>
+             </div>
+        </section>
+
+        <section id="projects" class="content-section">
+             <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient fade-in-section">Featured Projects</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Fin-Viz Dashboard</h3>
+                     <p class="text-gray-400 mb-4">A full-stack financial data visualization dashboard for tracking real-time stock and crypto performance using the MERN stack.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Node.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 100ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">AI Stock Prediction Model</h3>
+                     <p class="text-gray-400 mb-4">A Python-based machine learning model to predict stock volatility using historical data and NLP sentiment analysis.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">TensorFlow</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 200ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Low-Latency Trading System</h3>
+                     <p class="text-gray-400 mb-4">Engineered a backend for a simulated trading platform using Java and C++ for high-frequency data processing.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Java</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C++</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kafka</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 300ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Blockchain Payment Gateway</h3>
+                     <p class="text-gray-400 mb-4">A secure payment processing system using Ethereum smart contracts with React frontend and Node.js backend.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Solidity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Web3.js</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></極>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 400ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Cloud Migration Toolkit</h3>
+                     <p class="text-gray-400 mb-4">An automated tool for migrating on-premise applications to AWS with cost optimization and security compliance checks.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-極 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS CDK</span><span class="bg-gray-700 text-gray-300 text-xs font-semib極 px-2.5 py-1 rounded-full">Terraform</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 500ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Real-time Chat Application</h3>
+                     <p class="text-gray-400 mb-4">A scalable chat application with WebSocket connections, message persistence, and end-to-end encryption.</p>
+                     <極 class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Vue.js</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Socket.io</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Redis</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/極 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 600ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">MLOps Pipeline Framework</h3>
+                     <p class="text-gray-400 mb-4">End-to-end machine learning operations pipeline with automated training, deployment, and monitoring capabilities.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MLflow</極><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Prometheus</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="極-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 700ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">IoT Device Management</h3>
+                     <p class="text-gray-400 mb-4">A platform for managing thousands of IoT devices with real-time monitoring, firmware updates, and data analytics.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MQTT</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">TimescaleDB</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-極 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 800ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-極">Computer Vision API</h3>
+                     <p class="text-gray-400 mb-4">RESTful API for image recognition and object detection using deep learning models with FastAPI backend.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">FastAPI</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">PyTorch</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">OpenCV</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i極="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 900ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Microservices E-commerce</h3>
+                     <p class="text-gray-400 mb-4">A distributed e-commerce platform with separate services for products, orders, payments, and user management.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Spring Boot</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">RabbitMQ</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
+                     </div>
+                     <div class="mt-6 flex items極 space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400極:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1000ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Data Pipeline Orchestrator</h3>
+                     <p class="text-gray-400 mb-4">A workflow management system for coordinating complex ETL processes across multiple data sources and destinations.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Airflow</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">PostgreSQL</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1100ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Serverless Image Processor</極>
+                     <p class="text-gray-400 mb-4">A cloud-native application for processing images on-demand with automatic scaling and cost-effective pricing.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">AWS Lambda</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">S3</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">CloudFront</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab極-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-del極: 1200ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Portfolio Optimizer</h3>
+                     <p class="text-gray-400 mb-4">A financial tool that uses modern portfolio theory to optimize investment allocations based on risk tolerance.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">NumPy</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Matplotlib</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1300ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">CI/CD Automation Suite</h3>
+                     <p class="text-gray-400極-4">A comprehensive toolset for automating software delivery pipelines with built-in quality gates and極ecurity scanning.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Jenkins</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Docker</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1400ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Natural Language API</h3>
+                     <p class="text-gray-400 mb-4">A service for text analysis including sentiment analysis, entity recognition, and language translation capabilities.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs極ont-semibold px-2.5 py-1 rounded-full">Flask</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">spaCy</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">NLTK</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><極 class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1500ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Mobile Fitness App</h3>
+                     <p class="text-gray-400 mb-4">A cross-platform mobile application for tracking workouts, nutrition, and progress with social features.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">React Native</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Firebase</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Redux</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1600ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Distributed Cache System</h3>
+                     <p class="text-gray-400 mb-4">A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5極-1 rounded-full">Go</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold極-2.5 py-1 rounded-full">Raft</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">gRPC</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>極e Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+                 <div class="project-card bg-gray-800/50 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1700ms;">
+                     <h3 class="text-xl font-semibold mb-2 text-blue-400">AR Navigation System</h3>
+                     <p class="text-gray-400 mb-4">An augmented reality navigation application for indoor spaces using computer vision and sensor fusion techniques.</p>
+                     <div class="mt-4 flex flex-wrap gap-2">
+                         <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span><span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
+                     </div>
+                     <div class="mt-6 flex items-center space-x-4">
+                         <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                         <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300"><i class="fab fa-github mr-2"></i>Source Code</a>
+                     </div>
+                 </div>
+             </div>
+        </section>
+
+        <section id="skills" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
+            <h2 class="text-3xl font-bold mb-8 text-white pb-2 text-gradient">My Tech Stack</h2>
             
-            <div class="divider"></div>
+            <div class="tech-category">
+                <h3>Programming Languages</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-python-plain text-6xl"></i><span class="tooltip">Python</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-java-plain text-6xl"></i><span class="tooltip">Java</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-javascript-plain text-6xl"></i><span class="tooltip">JavaScript</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-typescript-plain text-6xl"></i><span class="tooltip">TypeScript</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-go-original-wordmark text-6xl"></i><span class="tooltip">Go</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-cplusplus-plain text-6xl"></i><span class="tooltip">C++</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-rust-plain text-6xl"></i><span class="tooltip">Rust</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">SQL</span></div>
+                </div>
+            </div>
             
-            <section>
-                <h2>All Bookmarks</h2>
-                <p>This section would contain a comprehensive list of all bookmarks with search and filter functionality.</p>
-            </section>
-        </div>
-        
-        <footer>
-            <p>&copy; 2023 Christopher's Website. All rights reserved.</p>
-        </footer>
+            <div class="tech-category">
+                <h3>Frontend Development</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-react-original text-6xl"></i><span class="tooltip">React</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-vuejs-plain text-6xl"></i><span class="tooltip">Vue.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-angularjs-plain text-6xl"></極><span class="tooltip">Angular</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-html5-plain text-6xl"></i><span class="tooltip">HTML5</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-css3-plain text-6xl"></i><span class="tooltip">CSS3</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-tailwindcss-plain text-6xl"></i><span class="tooltip">Tailwind CSS</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Backend Development</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-nodejs-plain text-6xl"></i><span class="tooltip">Node.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-express-original text-6xl"></i><span class="tooltip">Express.js</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-django-plain text-6xl"></i><span class="tooltip">Django</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-flask-original text-6xl"></i><span class="tooltip">Flask</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-fastapi-plain text-6xl"></i><span class="tooltip">FastAPI</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-spring-plain text-6xl"></i><span class="tooltip">Spring Boot</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>AI & Machine Learning</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-tensorflow-original text-6xl"></i><span class="tooltip">TensorFlow</span></div>
+                    <div class="tech-icon text-center"><極 class="devicon-pytorch-plain text-6xl"></i><span class="tooltip">PyTorch</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">Keras</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-robot text-6xl"></i><span class="tooltip">Scikit-learn</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-chart-line text-6xl"></i><span class="tooltip">Pandas</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-calculator text-6xl"></i><span class="tooltip">NumPy</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-opencv-plain text-6xl"></i><span class="tooltip">OpenCV</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-comments text-6xl"></i><span class="tooltip">NLTK</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Cloud & DevOps</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-amazonwebservices-original text-6xl"></i><span class="tooltip">AWS</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-googlecloud-plain text-6xl"></i><span class="tooltip">GCP</span></div>
+                    <div class="tech-icon text-center"><i class="極vicon-azure-plain text-6xl"></i><span class="tooltip">Azure</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-docker-plain text-極xl"></i><span class="tooltip">Docker</span></極>
+                    <div class="tech-icon text-center"><i class="devicon-kubernetes-plain text-6xl"></i><span class="tooltip">Kubernetes</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-terraform-plain text-6xl"></i><span class="tooltip">Terraform</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-ansible-plain text-6xl"></i><span class="tooltip">Ansible</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-jenkins-line text-6xl"></i><span class="tooltip">Jenkins</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-gitlab-plain text-6xl"></i><span class="tooltip">GitLab CI</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></i><span class="tooltip">NGINX</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-infinity text-6xl"></i><span class="tooltip">Prometheus</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-chart-bar text-6xl"></i><span class="tooltip">Grafana</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Databases</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-postgresql-plain text-6xl"></i><span class="tooltip">PostgreSQL</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-mysql-plain text-6xl"></i><span class="tooltip">MySQL</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-mongodb-plain text-6xl"></i><span class="tooltip">MongoDB</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-redis-plain text-6xl"></i><span class="tooltip">Redis</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-cassandra-plain text-6xl"></i><span class="tooltip">Cassandra</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-search text-6xl"></i><span class="tooltip">Elasticsearch</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-apache-plain text-6xl"></i><span class="tooltip">Apache Spark</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-hadoop-plain text-6xl"></i><span class="tooltip">Hadoop</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-apachekafka-original text-6xl"></i><span class="tooltip">Kafka</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-database text-6xl"></i><span class="tooltip">Hive</span></div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>Tools & Others</h3>
+                <div class="tech-grid">
+                    <div class="tech-icon text-center"><i class="devicon-git-plain text-6xl"></i><span class="tooltip">Git</span></div>
+                    <div class="tech-icon text-center"><i class="fab fa-github text-6xl"></i><span class="tooltip">GitHub</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-rocket text-6xl"></i><span class="tooltip">Postman</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-jira-plain text-6xl"></i><span class="tooltip">Jira</span></div>
+                    <div class="tech-icon text-center"><i class="devicon-figma-plain text-6xl"></i><span class="tooltip">Figma</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-cube text-6xl"></i><span class="tooltip">AWS S3</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-bolt text-6xl"></i><span class="tooltip">AWS Lambda</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-brain text-6xl"></i><span class="tooltip">AWS SageMaker</span></div>
+                    <div class="tech-icon text-center"><i class="fas fa-server text-6xl"></極><span class="tooltip">AWS EC2</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-700">
+            <h2 class="text-3xl font-bold mb-6 text-white pb-2 text-gradient">Get in Touch</h2>
+            <p class="text-center text-gray-400 max-w-2xl mx-auto mb-8">I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Feel free to reach out.</p>
+            <div class="flex justify-center items-center gap-8 text-4xl">
+                <a href="mailto:your-email@example.com" class="tech-icon text-gray-400 hover:text-blue-400"><i class="fas fa-envelope"></i><span class="tooltip">Email</span></a>
+                <a href="https://linkedin.com/in/your-username" target="_blank" class="tech-icon text-gray-400 hover:text-blue-400"><i class="fab fa-linkedin"></i><span class="tooltip">LinkedIn</span></a>
+                <a href="https://github.com/your-username" target="_blank" class="tech-icon text-gray-400 hover:text-blue-400"><i class="fab fa-github"></i><span class="tooltip">GitHub</span></a>
+            </div>
+        </section>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const sections = document.querySelectorAll('.content-section');
+
+            // Set initial active section
+            const initialSectionId = 'about';
+            document.getElementById(initialSectionId).classList.add('active');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active-tab'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active-tab');
+
+                    const sectionId極 tab.getAttribute('data-section');
+
+                    // Hide all sections
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+
+                    // Show the target section
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+
+            // Intersection Observer for fade-in animations
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px',
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Visitor counter - static with occasional small updates
+            const counter = document.getElementById('visitorCount');
+            let count = 55134;
+            
+            // Format number with commas
+            counter.textContent = count.toLocaleString();
+            
+            // Occasionally add a few visitors
+            setInterval(() => {
+                count += Math.floor(Math.random() * 3) + 1;
+                counter.textContent = count.toLocaleString();
+            }, 60000); // Update every minute
+        });
+    </script>
 </body>
 </html>
