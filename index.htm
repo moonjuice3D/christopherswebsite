@@ -204,6 +204,19 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
+    <div id="backend-status" style="
+  padding: 12px 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-family: monospace;
+  display: inline-block;
+">
+  🔄 Checking backend status...
+</div>
+
+    
     <div class="container mx-auto px-4 py-12 max-w-6xl">
 
         <header class="text-center mb-8 fade-in-section">
@@ -616,7 +629,23 @@
             });
         });
     </script>
+    <script>
+  const statusBox = document.getElementById("backend-status");
+
+  fetch("http://localhost:4000/api/health")
+    .then(res => res.json())
+    .then(data => {
+      statusBox.style.background = "#00c851";
+      statusBox.innerHTML = `✅ Backend Online<br>🕒 ${data.time}`;
+    })
+    .catch(() => {
+      statusBox.style.background = "#ff4444";
+      statusBox.innerHTML = "❌ Backend Offline";
+    });
+</script>
+
 </body>
 </html>
+
 
 
