@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Stock Prediction Demo | Christopher Alemao</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 1rem;
+      border: 1px solid #1f2937;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Simple top bar -->
+  <header class="w-full border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="index.htm" class="text-sm text-slate-400 hover:text-slate-200 transition">
+        ← Back to Portfolio
+      </a>
+      <span class="text-slate-300 text-sm">
+        AI Stock Prediction Demo
+      </span>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <div class="max-w-5xl mx-auto px-4 py-10">
+      <!-- Optional backend status badge (local) -->
+      <div id="backend-status" class="inline-block mb-6 text-xs px-3 py-2 rounded-lg bg-slate-800 text-slate-200 font-mono">
+        🔄 Checking backend status...
+      </div>
+
+      <div class="card p-8 mt-2">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
+          AI Stock Prediction Demo
+        </h1>
+        <p class="text-slate-400 mb-6 max-w-2xl">
+          Enter a series of historical closing prices (comma-separated). The backend will compute
+          an average return, volatility, and a simple next-day price prediction using your live API.
+        </p>
+
+        <label class="block text-sm font-medium text-slate-300 mb-2" for="price-input">
+          Price history
+          <span class="text-slate-500 text-xs">(e.g. 100, 102, 101, 105, 110)</span>
+        </label>
+        <input
+          id="price-input"
+          type="text"
+          class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
+          value="100, 102, 101, 105, 110"
+        />
+
+        <button
+          id="run-btn"
+          class="mt-1 inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-semibold text-white transition disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span class="mr-2">
+            <i class="fas fa-chart-line"></i>
+          </span>
+          Run Prediction
+        </button>
+
+        <div id="error-msg" class="mt-4 text-sm text-red-400 hidden"></div>
+
+        <div id="result-box" class="mt-6 hidden border-t border-slate-700 pt-4">
+          <h2 class="text-lg font-semibold text-slate-50 mb-2">Results</h2>
+          <div class="grid md:grid-cols-3 gap-4 text-sm">
+            <div>
+              <div class="text-slate-400">Average Return</div>
+              <div id="avg-return" class="text-slate-50 font-mono mt-1">–</div>
+            </div>
+            <div>
+              <div class="text-slate-400">Volatility</div>
+              <div id="volatility" class="text-slate-50 font-mono mt-1">–</div>
+            </div>
+            <div>
+              <div class="text-slate-400">Next-Day Prediction</div>
+              <div id="next-price" class="text-slate-50 font-mono mt-1">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-6 text-xs text-slate-500">
+        Note: This demo currently calls your backend at <code>http://localhost:4000</code>. To make it work on the internet,
+        deploy your backend and update the API base URL in the script.
+      </p>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-800 text-center text-xs text-slate-500 py-4">
+    © <span id="year"></span> Christopher Alemao
+  </footer>
+
+  <script>
+    const API_BASE = "http://localhost:4000"; // change after deploying backend
+
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Backend health check badge
+    const statusBox = document.getElementById("backend-status");
+    fetch(API_BASE + "/api/health")
+      .then(res => res.json())
+      .then(data => {
+        statusBox.style.backgroundColor = "#16a34a";
+        statusBox.textContent = "✅ Backend Online – " + (data.time || "");
+      })
+      .catch(() => {
+        statusBox.style.backgroundColor = "#b91c1c";
+        statusBox.textContent = "❌ Backend Offline (check server on port 4000)";
+      });
+
+    // Prediction logic
+    const runBtn = document.getElementById("run-btn");
+    const priceInput = document.getElementById("price-input");
+    const errorMsg = document.getElementById("error-msg");
+    const resultBox = document.getElementById("result-box");
+    const avgReturnEl = document.getElementById("avg-return");
+    const volatilityEl = document.getElementById("volatility");
+    const nextPriceEl = document.getElementById("next-price");
+
+    runBtn.addEventListener("click", () => {
+      errorMsg.classList.add("hidden");
+      resultBox.classList.add("hidden");
+
+      const raw = priceInput.value
+        .split(",")
+        .map(v => v.trim())
+        .filter(v => v.length > 0);
+
+      const prices = raw.map(Number).filter(v => !Number.isNaN(v));
+
+      if (prices.length < 3) {
+        errorMsg.textContent = "Please enter at least 3 valid numeric prices.";
+        errorMsg.classList.remove("hidden");
+        return;
+      }
+
+      runBtn.disabled = true;
+      runBtn.textContent = "Running...";
+
+      fetch(API_BASE + "/api/stock/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prices })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("API error " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          avgReturnEl.textContent =
+            (data.averageReturn != null ? (data.averageReturn * 100).toFixed(2) + "%" : "–");
+          volatilityEl.textContent =
+            (data.volatility != null ? (data.volatility * 100).toFixed(2) + "%" : "–");
+          nextPriceEl.textContent =
+            (data.nextDayPrediction != null ? data.nextDayPrediction.toFixed(2) : "–");
+
+          resultBox.classList.remove("hidden");
+        })
+        .catch(err => {
+          console.error(err);
+          errorMsg.textContent =
+            "Could not contact prediction API. Make sure your backend is running on port 4000.";
+          errorMsg.classList.remove("hidden");
+        })
+        .finally(() => {
+          runBtn.disabled = false;
+          runBtn.textContent = "Run Prediction";
+        });
+    });
+  </script>
+</body>
+</html>
