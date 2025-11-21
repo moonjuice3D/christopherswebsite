@@ -1,185 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">// backend/server.js
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-const PORT = process.env.PORT || 4000;
-
-// ----- Middleware -----
-app.use(cors());             // allow frontend from GitHub Pages / localhost
-app.use(express.json());     // parse JSON bodies
-
-// ----- In-memory data (resets on server restart) -----
-const payments = [
-  {
-    id: "INV-2041",
-    customer: "Prime Crypto Store",
-    amountEth: "0.42",
-    fiat: "$1,305.00",
-    network: "Sepolia",
-    status: "Settled",
-    statusType: "success",
-    time: "12 min ago",
-    txHash: "0x7d…a9f3",
-    method: "ETH",
-    memo: "Initial sample payment"
-  },
-  {
-    id: "INV-2038",
-    customer: "DeFi Analytics Pro",
-    amountEth: "0.13",
-    fiat: "$395.20",
-    network: "Polygon",
-    status: "Pending",
-    statusType: "pending",
-    time: "3 min ago",
-    txHash: "0xa1…b74c",
-    method: "USDC",
-    memo: "Subscription upgrade"
-  }
-];
-
-// Simple ID generator
-function nextInvoiceId() {
-  const base = 2040 + payments.length + 1;
-  return "INV-" + base;
-}
-
-// ----- Health check -----
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    time: new Date().toISOString()
-  });
-});
-
-// ----- AI Stock Prediction endpoint (alias + legacy path) -----
-app.post("/api/ai/stock-prediction", (req, res) => {
-  const { prices } = req.body || {};
-
-  if (!Array.isArray(prices) || prices.length === 0) {
-    return res.status(400).json({ error: "prices must be a non-empty array of numbers" });
-  }
-
-  const n = prices.length;
-  const returns = [];
-
-  for (let i = 1; i < n; i++) {
-    const prev = prices[i - 1];
-    const cur = prices[i];
-    if (prev <= 0) continue;
-    returns.push((cur - prev) / prev);
-  }
-
-  if (returns.length === 0) {
-    return res.status(400).json({ error: "not enough valid prices to compute returns" });
-  }
-
-  const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
-  const variance =
-    returns.reduce((acc, r) => acc + Math.pow(r - avgReturn, 2), 0) / returns.length;
-  const volatility = Math.sqrt(variance);
-
-  const lastPrice = prices[prices.length - 1];
-  const predictedNextPrice = lastPrice * (1 + avgReturn);
-
-  res.json({
-    avgReturn,
-    volatility,
-    predictedNextPrice
-  });
-});
-
-// Legacy alias: /api/stock/predict -> same logic
-app.post("/api/stock/predict", (req, res) => {
-  // just forward to the main handler
-  req.url = "/api/ai/stock-prediction";
-  app._router.handle(req, res);
-});
-
-// ----- Portfolio optimizer demo -----
-app.post("/api/portfolio/optimize", (req, res) => {
-  const { assets, riskTolerance = 0.5 } = req.body || {};
-
-  if (!Array.isArray(assets) || assets.length === 0) {
-    return res.status(400).json({ error: "assets must be a non-empty array" });
-  }
-
-  const n = assets.length;
-
-  // Naive equal-weight baseline + risk-tolerance tilt towards higher return
-  let totalScore = 0;
-  const scores = assets.map(a => {
-    const r = Number(a.expectedReturn || 0);
-    const v = Number(a.risk || 1);
-    const score = v <= 0 ? 0 : (r / v) ** (0.5 + riskTolerance); // higher r, lower v -> higher score
-    totalScore += score;
-    return score;
-  });
-
-  const weights = assets.map((asset, idx) => {
-    const w = totalScore > 0 ? scores[idx] / totalScore : 1 / n;
-    return {
-      symbol: asset.symbol || `Asset ${idx + 1}`,
-      weight: Number(w.toFixed(4))
-    };
-  });
-
-  res.json({
-    weights,
-    riskTolerance,
-    note: "Simple heuristic optimizer for demo purposes only."
-  });
-});
-
-// ----- NEW: Payments API -----
-
-// GET /api/payments -> list payments
-app.get("/api/payments", (req, res) => {
-  res.json({ payments });
-});
-
-// POST /api/payments -> log a new payment
-app.post("/api/payments", (req, res) => {
-  const {
-    customer = "Demo Customer",
-    amountEth,
-    fiat,
-    network = "Unknown",
-    method = "ETH",
-    memo = ""
-  } = req.body || {};
-
-  if (!amountEth || Number(amountEth) <= 0) {
-    return res.status(400).json({ error: "amountEth must be > 0" });
-  }
-
-  const payment = {
-    id: nextInvoiceId(),
-    customer,
-    amountEth: String(amountEth),
-    fiat: fiat || "",
-    network,
-    status: "Logged",
-    statusType: "pending",
-    time: new Date().toISOString(),
-    txHash: req.body.txHash || "0xlogged-via-api",
-    method,
-    memo
-  };
-
-  // Add to the top of the list
-  payments.unshift(payment);
-
-  return res.status(201).json(payment);
-});
-
-// ----- Start server -----
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
-
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Blockchain Payment Gateway | Christopher Alemao</title>
@@ -188,464 +8,612 @@ app.listen(PORT, () => {
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- React + ReactDOM + Babel (for JSX) -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- Web3.js -->
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
+    :root {
+      --bg-1: #020617;
+      --bg-2: #020617;
+      --accent-1: #0ea5e9;
+      --accent-2: #22c55e;
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --border-soft: rgba(148, 163, 184, 0.35);
+    }
+
     body {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
-      color: #e5e7eb;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 0% 0%, #0f172a, #020617 55%, #020617 100%);
+      color: #e2e8f0;
       min-height: 100vh;
     }
 
-    .glass-panel {
-      background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.85));
-      border-radius: 1.5rem;
-      border: 1px solid rgba(148, 163, 184, 0.3);
+    /* Background energy blobs */
+    .bg-orbit {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.17), transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(96, 165, 250, 0.18), transparent 55%),
+        radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.12), transparent 55%);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+      z-index: -1;
+      animation: float-orbit 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes float-orbit {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      50%  { transform: translate3d(-12px, 8px, 0) scale(1.03); }
+      100% { transform: translate3d(10px, -10px, 0) scale(1.02); }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border-radius: 1.25rem;
+      border: 1px solid var(--border-soft);
       box-shadow:
-        0 30px 60px rgba(15, 23, 42, 0.8),
-        0 0 40px rgba(56, 189, 248, 0.18);
+        0 20px 60px rgba(15, 23, 42, 0.7),
+        0 0 0 1px rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(18px);
     }
 
-    .neon-pill {
+    .pill {
       border-radius: 999px;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
     }
 
-    .gradient-border {
-      position: relative;
-      border-radius: 1.25rem;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.7), rgba(129, 140, 248, 0.7), rgba(16, 185, 129, 0.7));
-    }
-
-    .gradient-border-inner {
-      border-radius: 1.2rem;
-      background: rgba(15, 23, 42, 0.96);
-    }
-
-    .status-pill {
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.6rem;
       border-radius: 999px;
-      padding: 0.1rem 0.75rem;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .status-pill.success {
-      background: rgba(22, 163, 74, 0.15);
+    .status-pending {
+      background: rgba(234, 179, 8, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(234, 179, 8, 0.45);
+    }
+    .status-confirmed {
+      background: rgba(34, 197, 94, 0.12);
       color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.6);
+      border: 1px solid rgba(34, 197, 94, 0.45);
+    }
+    .status-failed {
+      background: rgba(248, 113, 113, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.45);
     }
 
-    .status-pill.pending {
-      background: rgba(234, 179, 8, 0.15);
-      color: #fde68a;
-      border: 1px solid rgba(234, 179, 8, 0.6);
+    /* Simple pulse for "Processing" state */
+    .pulse-ring {
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
+      animation: pulse-ring 1.7s ease-out infinite;
+      pointer-events: none;
     }
 
-    .status-pill.failed {
-      background: rgba(220, 38, 38, 0.15);
-      color: #fecaca;
-      border: 1px solid rgba(239, 68, 68, 0.7);
+    @keyframes pulse-ring {
+      0%   { opacity: 0.9; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.08); }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 1.25rem;
+      bottom: 1.25rem;
+      z-index: 50;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Scrollbar subtle */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.45);
+      border-radius: 999px;
     }
   </style>
 </head>
-<body class="text-slate-100">
-  <!-- Top bar -->
-  <div class="w-full border-b border-slate-800/70 bg-slate-950/70 backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
-      <div class="flex items-center gap-3">
-        <span
-          class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-emerald-400 text-slate-950 font-extrabold text-xl shadow-lg shadow-cyan-500/40">
-          ₿
+<body class="bg-slate-950 text-slate-100">
+  <div class="bg-orbit"></div>
+
+  <div class="min-h-screen max-w-6xl mx-auto px-4 py-8 flex flex-col gap-8">
+    <!-- Top nav -->
+    <header class="flex items-center justify-between">
+      <a href="index.htm#projects" class="pill px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-sky-300 transition-colors">
+        ← Back to Portfolio
+      </a>
+      <div class="flex items-center gap-3 text-xs sm:text-sm">
+        <span class="text-slate-400 hidden sm:inline">Gateway status:</span>
+        <span id="backend-pill" class="status-chip status-pending">
+          <span class="inline-block h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+          Checking backend…
         </span>
-        <div>
-          <div class="text-xs uppercase tracking-[0.25em] text-slate-400">
-            Christopher Alemao
-          </div>
-          <div class="text-sm font-semibold text-slate-100">
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="grid lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+      <!-- Left: copy + metrics -->
+      <div class="glass-card relative overflow-hidden p-6 sm:p-8 flex flex-col gap-6">
+        <div class="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-gradient-to-br from-sky-500/20 via-cyan-400/10 to-emerald-400/0 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 bottom-0 h-40 w-40 rounded-full bg-gradient-to-br from-emerald-400/15 to-transparent blur-3xl pointer-events-none"></div>
+
+        <div class="relative">
+          <p class="text-xs uppercase tracking-[0.28em] text-sky-300/80 mb-2">
             Blockchain Payment Gateway
+          </p>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight mb-3">
+            Route high-value payments
+            <span class="text-sky-400">through Ethereum</span> with audit-ready traces.
+          </h1>
+          <p class="text-sm sm:text-base text-slate-300/90 max-w-xl">
+            This demo simulates a Web3 payment operations console. Every payment is
+            assigned a pseudo transaction hash, confirmations, gas fee, and chain.
+            Under the hood it can talk to a simple Node.js API, or run fully client-side
+            for zero-cost demos.
+          </p>
+        </div>
+
+        <!-- Stats row -->
+        <div class="relative grid grid-cols-3 gap-3 text-xs sm:text-sm mt-2">
+          <div class="pill px-3 py-2.5 flex flex-col gap-1">
+            <span class="text-slate-400">Simulated TVL</span>
+            <span class="text-sky-300 font-semibold" id="stat-tvl">$18.4M</span>
           </div>
+          <div class="pill px-3 py-2.5 flex flex-col gap-1">
+            <span class="text-slate-400">Success rate</span>
+            <span class="text-emerald-300 font-semibold" id="stat-success">99.2%</span>
+          </div>
+          <div class="pill px-3 py-2.5 flex flex-col gap-1">
+            <span class="text-slate-400">Chains</span>
+            <span class="text-slate-100 font-semibold">ETH · Sepolia · Polygon</span>
+          </div>
+        </div>
+
+        <!-- Tech badges -->
+        <div class="relative flex flex-wrap gap-2 text-xs mt-2">
+          <span class="status-chip status-confirmed">Solidity</span>
+          <span class="status-chip status-confirmed">React-style UI</span>
+          <span class="status-chip status-confirmed">Web3.js (ready)</span>
+          <span class="status-chip status-pending">Node.js API</span>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 text-xs sm:text-sm">
-        <a href="index.htm#projects"
-           class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full border border-slate-700/80 text-slate-300 hover:bg-slate-800/80 transition">
-          <i class="fa-solid fa-arrow-left mr-2 text-slate-400"></i>
-          Back to Portfolio
-        </a>
+      <!-- Right: payment form -->
+      <div class="glass-card relative p-6 sm:p-8 flex flex-col gap-5">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <h2 class="text-lg sm:text-xl font-semibold">Create payment</h2>
+            <p class="text-xs text-slate-400 mt-1">
+              Submit a simulated on-chain payment. This can also POST to your Node.js API.
+            </p>
+          </div>
+          <span class="pill px-3 py-1 text-[0.65rem] font-semibold text-emerald-300 uppercase tracking-[0.16em]">
+            Demo mode
+          </span>
+        </div>
 
-        <span class="inline-flex items-center px-3 py-1.5 neon-pill bg-slate-900/70 text-xs text-cyan-300">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
-          Demo · Ethereum · Web3.js · React
+        <form id="payment-form" class="space-y-3 text-sm">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-slate-300 text-xs font-medium">From wallet</label>
+            <div class="pill px-3 py-2 text-[0.78rem] text-slate-300 flex items-center justify-between">
+              <span id="from-address">0xC0C0…ALM0</span>
+              <span class="text-slate-500 hidden sm:inline">Cold storage (simulated)</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="to" class="text-slate-300 text-xs font-medium">Recipient address</label>
+            <input
+              id="to"
+              type="text"
+              required
+              placeholder="0xA2c9... or ENS (simulated)"
+              class="pill px-3 py-2 bg-slate-900/60 text-slate-100 outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 text-xs sm:text-sm"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex flex-col gap-1.5">
+              <label for="amount" class="text-slate-300 text-xs font-medium">Amount (ETH)</label>
+              <input
+                id="amount"
+                type="number"
+                step="0.0001"
+                min="0.0001"
+                required
+                placeholder="0.125"
+                class="pill px-3 py-2 bg-slate-900/60 text-slate-100 outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 text-xs sm:text-sm"
+              />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="network" class="text-slate-300 text-xs font-medium">Network</label>
+              <select
+                id="network"
+                class="pill px-3 py-2 bg-slate-900/60 text-slate-100 outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 text-xs sm:text-sm"
+              >
+                <option value="Ethereum Mainnet">Ethereum Mainnet</option>
+                <option value="Sepolia Testnet">Sepolia Testnet</option>
+                <option value="Polygon">Polygon</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="memo" class="text-slate-300 text-xs font-medium">Payment memo (optional)</label>
+            <input
+              id="memo"
+              type="text"
+              placeholder="Settlement for Invoice #INV-2041"
+              class="pill px-3 py-2 bg-slate-900/60 text-slate-100 outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500 text-xs sm:text-sm"
+            />
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center gap-1.5 text-[0.7rem] text-slate-400">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              <span>Gas estimated ≈ <span id="gas-estimate">0.0012 ETH</span></span>
+            </div>
+            <button
+              id="submit-btn"
+              type="submit"
+              class="relative inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold bg-gradient-to-r from-sky-500 to-emerald-400 text-slate-950 shadow-lg shadow-sky-500/30 hover:shadow-emerald-400/30 hover:brightness-110 transition-all"
+            >
+              <span id="submit-label">Send payment</span>
+              <span id="submit-spinner" class="hidden h-3 w-3 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></span>
+            </button>
+          </div>
+        </form>
+
+        <p class="mt-2 text-[0.68rem] text-slate-500 leading-relaxed">
+          This environment does <span class="font-semibold text-slate-300">not broadcast real transactions</span>.
+          It generates deterministic-looking hashes and confirmations client-side. To wire it up to real Web3
+          providers, plug in <span class="text-sky-300">ethers.js</span> or <span class="text-sky-300">Web3.js</span>
+          where noted in the script.
+        </p>
+      </div>
+    </section>
+
+    <!-- Ledger / activity -->
+    <section class="glass-card p-5 sm:p-6 md:p-7 flex flex-col gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <h2 class="text-lg sm:text-xl font-semibold">Ledger</h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Every simulated payment appears here with a fake hash, block height, and confirmations.
+            When your Node.js API is online, this table can be hydrated from <code class="text-[0.7rem] bg-slate-900/70 px-1.5 py-0.5 rounded border border-slate-700/60">/api/payments</code>.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="pill px-3 py-1 text-slate-300">
+            Last block: <span id="last-block">19,842,110</span>
+          </span>
+          <span class="pill px-3 py-1 text-slate-300">
+            Gas price: <span id="gas-price">24</span> gwei
+          </span>
+        </div>
+      </div>
+
+      <div class="relative mt-1 border border-slate-700/70 rounded-xl overflow-hidden bg-slate-950/60">
+        <div class="max-h-72 overflow-auto text-xs">
+          <table class="min-w-full text-left">
+            <thead class="bg-slate-900/90 border-b border-slate-800 text-[0.65rem] uppercase tracking-[0.15em] text-slate-400">
+              <tr>
+                <th class="px-4 py-2.5">Time</th>
+                <th class="px-4 py-2.5">Tx hash</th>
+                <th class="px-4 py-2.5">To</th>
+                <th class="px-4 py-2.5">Network</th>
+                <th class="px-4 py-2.5 text-right">Amount (ETH)</th>
+                <th class="px-4 py-2.5 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-body" class="divide-y divide-slate-800/80">
+              <!-- rows injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer note -->
+    <footer class="pb-3 text-[0.7rem] text-slate-500">
+      <p>
+        Backend endpoint (optional, for real demos): <span class="font-mono text-slate-300" id="api-base-label">http://localhost:4000</span>.
+        Update <span class="font-mono text-slate-300">API_BASE</span> in the script when you deploy your Node.js server
+        (Render / Railway free tiers both work).
+      </p>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <div class="glass-card px-4 py-3 flex items-start gap-3 border border-emerald-400/50 bg-slate-900/95">
+      <div class="mt-0.5">
+        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
+          ✓
         </span>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-emerald-300">Payment simulated</p>
+        <p id="toast-body" class="text-[0.7rem] text-slate-200 mt-0.5"></p>
       </div>
     </div>
   </div>
 
-  <!-- Root for React app -->
-  <div id="root" class="max-w-6xl mx-auto px-4 py-8"></div>
+  <script>
+    // ============================
+    // Config
+    // ============================
+    const API_BASE = "http://localhost:4000"; // change when you deploy backend
 
-  <script type="text/babel">
-  const { useState, useEffect } = React;
+    // ============================
+    // Elements
+    // ============================
+    const backendPill = document.getElementById("backend-pill");
+    const ledgerBody = document.getElementById("ledger-body");
+    const gasEstimateEl = document.getElementById("gas-estimate");
+    const lastBlockEl = document.getElementById("last-block");
+    const gasPriceEl = document.getElementById("gas-price");
+    const toastEl = document.getElementById("toast");
+    const toastBodyEl = document.getElementById("toast-body");
+    const form = document.getElementById("payment-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const submitLabel = document.getElementById("submit-label");
+    const submitSpinner = document.getElementById("submit-spinner");
 
-  // Base URL for your backend API
-  // When you deploy the backend (Render/Railway/etc.), change this to that URL.
-  const API_BASE = "http://localhost:4000";
+    let payments = [];
+    let backendOnline = false;
 
-  const CHAIN_NAMES = {
-    "0x1": "Ethereum Mainnet",
-    "0x5": "Goerli",
-    "0xaa36a7": "Sepolia",
-    "0x89": "Polygon",
-    "0x13881": "Mumbai"
-  };
+    // Seed data for ledger
+    const seedPayments = [
+      {
+        id: "INV-2041",
+        hash: "0x9e3f1a...7b92d4",
+        to: "0xA21c…f90B",
+        network: "Ethereum Mainnet",
+        amount: 0.845,
+        status: "confirmed",
+        timestamp: new Date(Date.now() - 1000 * 60 * 36).toISOString(),
+        block: 19842001,
+        confirmations: 42,
+      },
+      {
+        id: "INV-2038",
+        hash: "0x7c51a0...c4fa32",
+        to: "0xbE5a…9C72",
+        network: "Polygon",
+        amount: 2.41,
+        status: "confirmed",
+        timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
+        block: 43729922,
+        confirmations: 128,
+      },
+      {
+        id: "PAYOUT-102",
+        hash: "0x13ac4f...e901d3",
+        to: "0xF9d0…01bA",
+        network: "Sepolia Testnet",
+        amount: 0.121,
+        status: "confirmed",
+        timestamp: new Date(Date.now() - 1000 * 60 * 8).toISOString(),
+        block: 5123341,
+        confirmations: 9,
+      },
+    ];
 
-  // 👉 Replace this with your *testnet* merchant address for live test txs
-  const MERCHANT_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-  const samplePayments = [
-    {
-      id: "INV-2041",
-      customer: "Prime Crypto Store",
-      amountEth: "0.42",
-      fiat: "$1,305.00",
-      network: "Sepolia",
-      status: "Settled",
-      statusType: "success",
-      time: "12 min ago",
-      txHash: "0x7d…a9f3",
-      method: "ETH",
-      memo: "Initial sample payment"
-    },
-    {
-      id: "INV-2038",
-      customer: "DeFi Analytics Pro",
-      amountEth: "0.13",
-      fiat: "$395.20",
-      network: "Polygon",
-      status: "Pending",
-      statusType: "pending",
-      time: "3 min ago",
-      txHash: "0xa1…b74c",
-      method: "USDC",
-      memo: "Subscription upgrade"
-    },
-    {
-      id: "INV-2036",
-      customer: "NFT Launchpad",
-      amountEth: "0.87",
-      fiat: "$2,707.80",
-      network: "Sepolia",
-      status: "Failed",
-      statusType: "failed",
-      time: "26 min ago",
-      txHash: "0x4f…c892",
-      method: "ETH",
-      memo: "Payment failed"
+    // ============================
+    // Helpers
+    // ============================
+    function shortHash(hash) {
+      if (!hash) return "";
+      if (hash.length <= 12) return hash;
+      return hash.slice(0, 8) + "…" + hash.slice(-6);
     }
-  ];
 
-  function App() {
-    const [web3, setWeb3] = useState(null);
-    const [account, setAccount] = useState(null);
-    const [chainId, setChainId] = useState(null);
+    function formatTime(iso) {
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
 
-    const [amountEth, setAmountEth] = useState("0.05");
-    const [fiatAmount, setFiatAmount] = useState("150.00");
-    const [currency, setCurrency] = useState("USD");
-    const [asset, setAsset] = useState("ETH");
-    const [memo, setMemo] = useState("Order #2042 – Premium subscription");
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
 
-    const [status, setStatus] = useState(
-      "Connect a wallet to start a live crypto payment."
-    );
-    const [statusTone, setStatusTone] = useState("idle"); // idle | ok | pending | error | warning
-    const [isPaying, setIsPaying] = useState(false);
-    const [txHash, setTxHash] = useState(null);
-    const [payments, setPayments] = useState(samplePayments);
-    const [backendOnline, setBackendOnline] = useState(false);
+    function randomInt(min, max) {
+      return Math.floor(randomBetween(min, max + 1));
+    }
 
-    // ---- Wire up MetaMask listeners ----
-    useEffect(() => {
-      if (!window.ethereum) return;
-
-      const handleAccountsChanged = (accounts) => {
-        setAccount(accounts[0] || null);
-      };
-
-      const handleChainChanged = (cid) => {
-        setChainId(cid);
-      };
-
-      window.ethereum.on("accountsChanged", handleAccountsChanged);
-      window.ethereum.on("chainChanged", handleChainChanged);
-
-      return () => {
-        if (!window.ethereum.removeListener) return;
-        window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
-        window.ethereum.removeListener("chainChanged", handleChainChanged);
-      };
-    }, []);
-
-    // ---- Load payments from backend if available ----
-    useEffect(() => {
-      async function loadPayments() {
-        try {
-          const res = await fetch(`${API_BASE}/api/payments`);
-          if (!res.ok) throw new Error("Non-200 from payments API");
-
-          const data = await res.json();
-          if (Array.isArray(data.payments)) {
-            setPayments(data.payments);
-            setBackendOnline(true);
-            setStatus(
-              "Loaded payments from backend API. Connect a wallet to create a new one."
-            );
-            setStatusTone("ok");
-          }
-        } catch (err) {
-          console.log("Payments API not available, using sample data:", err.message);
-          setBackendOnline(false);
-          // keep samplePayments
-        }
+    function randomHash() {
+      const hex = "abcdef0123456789";
+      let out = "0x";
+      for (let i = 0; i < 64; i++) {
+        out += hex[Math.floor(Math.random() * hex.length)];
       }
+      return out;
+    }
 
-      loadPayments();
-    }, []);
-
-    const connectWallet = async () => {
-      if (!window.ethereum) {
-        setStatus("No Web3 wallet detected. Install MetaMask to try the live flow.");
-        setStatusTone("error");
-        return;
+    function setBackendStatus(online) {
+      backendOnline = online;
+      backendPill.classList.remove("status-pending", "status-confirmed", "status-failed");
+      if (online) {
+        backendPill.classList.add("status-confirmed");
+        backendPill.innerHTML = '<span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Backend online';
+      } else {
+        backendPill.classList.add("status-failed");
+        backendPill.innerHTML = '<span class="inline-block h-1.5 w-1.5 rounded-full bg-rose-400"></span> Backend offline (using local demo data)';
       }
+    }
 
-      try {
-        const provider = window.ethereum;
-        const accounts = await provider.request({ method: "eth_requestAccounts" });
-        const cid = await provider.request({ method: "eth_chainId" });
+    function showToast(message) {
+      toastBodyEl.textContent = message;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 3800);
+    }
 
-        const w3 = new Web3(provider);
-        setWeb3(w3);
-        setAccount(accounts[0]);
-        setChainId(cid);
-        setStatus(
-          backendOnline
-            ? "Wallet connected. Payments will also be logged to the backend API."
-            : "Wallet connected. Backend not detected, using local demo ledger."
-        );
-        setStatusTone("ok");
-      } catch (err) {
-        console.error(err);
-        setStatus("Wallet connection cancelled.");
-        setStatusTone("error");
-      }
-    };
-
-    const handlePay = async (e) => {
-      e.preventDefault();
-      setTxHash(null);
-
-      if (!web3 || !account) {
-        setStatus("Please connect a wallet first.");
-        setStatusTone("error");
-        return;
-      }
-
-      if (!amountEth || Number(amountEth) <= 0) {
-        setStatus("Enter a positive crypto amount.");
-        setStatusTone("error");
-        return;
-      }
-
-      const networkLabel = chainId
-        ? CHAIN_NAMES[chainId] || `Chain ID ${parseInt(chainId, 16)}`
-        : "Unknown";
-
-      const weiValue = web3.utils.toWei(amountEth.toString(), "ether");
-
-      const txParams = {
-        from: account,
-        to: MERCHANT_ADDRESS,
-        value: weiValue
-      };
-
-      // Base payment object (used both for demo + backend logging)
-      const paymentBase = {
-        customer: "Demo Customer",
-        amountEth,
-        fiat: `${currency} ${fiatAmount}`,
-        network: networkLabel,
-        method: asset,
-        memo
-      };
-
-      // DEMO MODE if merchant address is not set
-      const demoMode = /^0x0{40}$/i.test(MERCHANT_ADDRESS);
-
-      try {
-        setIsPaying(true);
-        setStatus("Preparing transaction…");
-        setStatusTone("pending");
-
-        let liveTxHash = null;
-
-        if (!demoMode) {
-          setStatus("Waiting for wallet confirmation…");
-          liveTxHash = await window.ethereum.request({
-            method: "eth_sendTransaction",
-            params: [txParams]
-          });
-          setTxHash(liveTxHash);
-          setStatus("Transaction submitted to the network.");
-          setStatusTone("ok");
-        } else {
-          setStatus(
-            "Demo mode: MERCHANT_ADDRESS not configured. Simulating payment + logging via API."
-          );
-          setStatusTone("warning");
-        }
-
-        // Try to log with backend API (if available)
-        let savedPayment = null;
-
-        if (backendOnline) {
-          try {
-            const res = await fetch(`${API_BASE}/api/payments`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ...paymentBase,
-                txHash: liveTxHash || "0xsimulated-demo"
-              })
-            });
-
-            if (res.ok) {
-              savedPayment = await res.json();
-              setStatus((prev) =>
-                prev + " Payment has been logged to the backend ledger."
-              );
-              setStatusTone("ok");
-            } else {
-              console.warn("POST /api/payments failed with", res.status);
-            }
-          } catch (err) {
-            console.warn("Could not reach payments API, using local ledger only.", err);
-          }
-        }
-
-        // Fallback: build a local payment row if API not available
-        if (!savedPayment) {
-          savedPayment = {
-            id: "INV-" + (2042 + payments.length),
-            ...paymentBase,
-            status: demoMode ? "Simulated" : "Pending",
-            statusType: demoMode ? "pending" : "pending",
-            time: "Just now",
-            txHash: liveTxHash
-              ? liveTxHash.slice(0, 6) + "…" + liveTxHash.slice(-4)
-              : "0xsimulated-demo"
-          };
-        }
-
-        // Update table
-        setPayments((prev) => [savedPayment, ...prev]);
-      } catch (err) {
-        console.error(err);
-        setStatus(err?.message || "Payment rejected or failed.");
-        setStatusTone("error");
-      } finally {
-        setIsPaying(false);
-      }
-    };
-
-    const networkLabel = chainId
-      ? CHAIN_NAMES[chainId] || `Chain ID ${parseInt(chainId, 16)}`
-      : "No network";
-
-    const settlementVolume = payments
-      .reduce((acc, p) => acc + Number(p.amountEth || 0), 0)
-      .toFixed(2);
-
-    return (
-      <div className="space-y-6 pb-10">
-        {/* Hero / context */}
-        <div className="glass-panel px-6 py-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-700/60 text-xs text-slate-300 mb-3">
-              <i className="fa-solid fa-shield-halved mr-2 text-emerald-400"></i>
-              Secure Ethereum payments · Smart contracts · Real-time settlement
-            </div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-slate-50 mb-1">
-              Fin-Viz Dashboard · Blockchain Payment Gateway
-            </h1>
-            <p className="text-sm text-slate-400 max-w-2xl">
-              React + Web3.js front-end that can connect to any EVM wallet and generate
-              Ethereum-based payments. A Node.js backend API logs each payment to a CRM-style ledger.
-              In this portfolio demo, everything runs on free tiers and testnet-friendly settings.
-            </p>
-          </div>
-
-          <div className="text-right space-y-2">
-            <button
-              onClick={connectWallet}
-              className="inline-flex items-center px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 font-semibold text-sm shadow-lg shadow-cyan-500/40 hover:shadow-emerald-500/40 hover:scale-[1.01] transition"
-            >
-              <i className="fa-brands fa-ethereum mr-2"></i>
-              {account ? "Wallet Connected" : "Connect Wallet"}
-            </button>
-            <div className="text-[10px] text-slate-400">
-              {account ? (
-                <>
-                  <span className="font-mono text-emerald-300 mr-2">
-                    {account.slice(0, 6)}…{account.slice(-4)}
-                  </span>
-                  <span className="text-slate-500">on {networkLabel}</span>
-                </>
-              ) : (
-                <>No wallet connected</>
-              )}
-            </div>
-            <div className="text-[10px] text-slate-500">
-              Backend:{" "}
-              <span className={backendOnline ? "text-emerald-300" : "text-slate-400"}>
-                {backendOnline ? "Online" : "Not detected (using local demo data)"}
+    function renderLedger() {
+      ledgerBody.innerHTML = "";
+      payments
+        .slice()
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .forEach((p) => {
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-slate-900/80 transition-colors";
+          tr.innerHTML = `
+            <td class="px-4 py-2.5 whitespace-nowrap text-slate-300/90">${formatTime(p.timestamp)}</td>
+            <td class="px-4 py-2.5 font-mono text-[0.68rem] text-sky-300">${shortHash(p.hash)}</td>
+            <td class="px-4 py-2.5 text-slate-300/90">${p.to}</td>
+            <td class="px-4 py-2.5 text-slate-400">${p.network}</td>
+            <td class="px-4 py-2.5 text-right text-slate-100">${p.amount.toFixed(4)}</td>
+            <td class="px-4 py-2.5 text-right">
+              <span class="status-chip ${
+                p.status === "confirmed"
+                  ? "status-confirmed"
+                  : p.status === "pending"
+                  ? "status-pending"
+                  : "status-failed"
+              }">
+                ${p.status}
               </span>
-            </div>
-          </div>
-        </div>
+            </td>
+          `;
+          ledgerBody.appendChild(tr);
+        });
+    }
 
-        {/* Main layout (same as before, but now using `payments` state) */}
-        {/* ---- everything from here down can stay identical to the previous version,
-                *using the same JSX you already have*,
-                because we didn't change the table or metrics structure ---- */}
+    function simulateNetworkMetrics() {
+      const baseBlock = 19842110 + randomInt(-40, 40);
+      const gas = randomInt(18, 34);
+      lastBlockEl.textContent = baseBlock.toLocaleString();
+      gasPriceEl.textContent = gas;
+      gasEstimateEl.textContent = randomBetween(0.0008, 0.0023).toFixed(4) + " ETH";
+    }
 
-        {/* For brevity, keep your existing JSX for:
-              - metrics cards
-              - payments table (reads from `payments`)
-              - right-side form (uses handlePay)
-              - status panel (uses status/statusTone/txHash)
-            It will now be powered by the updated logic above. */}
-      </div>
-    );
-  }
+    // ============================
+    // Backend bootstrapping
+    // ============================
+    async function tryLoadFromBackend() {
+      try {
+        const res = await fetch(API_BASE + "/api/payments");
+        if (!res.ok) throw new Error("Bad status");
+        const data = await res.json();
+        if (Array.isArray(data.payments)) {
+          payments = data.payments;
+        } else {
+          payments = seedPayments;
+        }
+        setBackendStatus(true);
+      } catch (err) {
+        payments = seedPayments;
+        setBackendStatus(false);
+      }
 
-  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-</script>
+      renderLedger();
+      simulateNetworkMetrics();
+    }
 
+    // ============================
+    // Form handler
+    // ============================
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const to = document.getElementById("to").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value);
+      const network = document.getElementById("network").value;
+      const memo = document.getElementById("memo").value.trim();
+
+      if (!to || !amount || amount <= 0) return;
+
+      // Visual "processing" state
+      submitBtn.disabled = true;
+      submitLabel.textContent = "Processing…";
+      submitSpinner.classList.remove("hidden");
+      submitBtn.classList.add("relative");
+      let ring = document.querySelector("#submit-btn .pulse-ring");
+      if (!ring) {
+        ring = document.createElement("div");
+        ring.className = "pulse-ring";
+        submitBtn.appendChild(ring);
+      }
+
+      // Fake short delay to simulate chain confirmation
+      await new Promise((resolve) => setTimeout(resolve, randomInt(900, 1600)));
+
+      // Construct simulated tx
+      const tx = {
+        id: "SIM-" + randomInt(1000, 9999),
+        hash: randomHash(),
+        to,
+        network,
+        amount,
+        status: "confirmed",
+        timestamp: new Date().toISOString(),
+        block: randomInt(19842000, 19843000),
+        confirmations: randomInt(6, 72),
+        memo,
+      };
+
+      // Push locally
+      payments.unshift(tx);
+      renderLedger();
+      simulateNetworkMetrics();
+
+      // Optional: POST to backend if available
+      if (backendOnline) {
+        try {
+          await fetch(API_BASE + "/api/payments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(tx),
+          });
+        } catch (err) {
+          // Silent fail – we already rendered locally
+        }
+      }
+
+      showToast(
+        `Simulated ${amount.toFixed(4)} ETH to ${to.slice(0, 8)}… on ${network}. Hash: ${shortHash(tx.hash)}`
+      );
+
+      // Reset UI
+      submitBtn.disabled = false;
+      submitLabel.textContent = "Send payment";
+      submitSpinner.classList.add("hidden");
+      if (ring) ring.remove();
+      form.reset();
+    });
+
+    // Init
+    tryLoadFromBackend();
+  </script>
 </body>
 </html>
