@@ -5,185 +5,350 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Stock Prediction Demo | Christopher Alemao</title>
 
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
   <style>
+    :root {
+      --bg-from: 15, 23, 42;
+      --bg-to: 2, 6, 23;
+      --accent: 59, 130, 246;
+      --accent-2: 56, 189, 248;
+      --accent-3: 34, 197, 94;
+    }
+
     body {
       font-family: "Inter", sans-serif;
-      background: #020617;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.16), transparent 55%),
+                  linear-gradient(to bottom right,
+                    rgb(var(--bg-from)),
+                    rgb(var(--bg-to)));
+      min-height: 100vh;
       color: #e5e7eb;
     }
 
-    .card {
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 1rem;
-      border: 1px solid #1f2937;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    /* Animated grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      opacity: 0.3;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: -1;
+      animation: grid-move 40s linear infinite;
+    }
+
+    @keyframes grid-move {
+      0%   { transform: translate3d(0, 0, 0); }
+      50%  { transform: translate3d(-40px, -40px, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+
+    /* Glass card + glow ring */
+    .glass-card {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.10), transparent 55%),
+                  rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      box-shadow:
+        0 24px 80px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      backdrop-filter: blur(22px);
+    }
+
+    .glow-ring {
+      position: absolute;
+      inset: -2px;
+      border-radius: 1.5rem;
+      background: conic-gradient(
+        from 180deg,
+        rgba(var(--accent), 0.0),
+        rgba(var(--accent), 0.85),
+        rgba(var(--accent-2), 0.9),
+        rgba(var(--accent-3), 0.95),
+        rgba(var(--accent), 0.0)
+      );
+      opacity: 0.0;
+      filter: blur(16px);
+      transition: opacity 0.4s ease-out;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .glass-card:hover .glow-ring {
+      opacity: 0.9;
+    }
+
+    /* Result stat cards */
+    .stat-card {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.15), transparent 60%),
+                  rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    /* Backend status pill */
+    .status-pill-ok {
+      background: linear-gradient(to right, #22c55e, #4ade80);
+      color: #052e16;
+    }
+
+    .status-pill-bad {
+      background: linear-gradient(to right, #ef4444, #f97373);
+      color: #450a0a;
+    }
+
+    /* Small pulse on the status dot */
+    .status-dot {
+      position: relative;
+    }
+
+    .status-dot::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      opacity: 0.45;
+      animation: ping 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes ping {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+      }
+      75%, 100% {
+        transform: scale(1.35);
+        opacity: 0;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
 
-  <!-- Simple top bar -->
-  <header class="w-full border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="index.htm" class="text-sm text-slate-400 hover:text-slate-200 transition">
-        ← Back to Portfolio
+<body class="text-slate-100">
+  <div class="grid-bg"></div>
+
+  <div class="min-h-screen flex flex-col">
+    <!-- Top bar -->
+    <header class="w-full max-w-5xl mx-auto px-4 pt-6 flex items-center justify-between">
+      <a href="index.htm#projects"
+         class="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-sky-300 transition-colors">
+        <i class="fa-solid fa-arrow-left-long"></i>
+        Back to Portfolio
       </a>
-      <span class="text-slate-300 text-sm">
-        AI Stock Prediction Demo
-      </span>
-    </div>
-  </header>
 
-  <main class="flex-1">
-    <div class="max-w-5xl mx-auto px-4 py-10">
-      <!-- Optional backend status badge (local) -->
-      <div id="backend-status" class="inline-block mb-6 text-xs px-3 py-2 rounded-lg bg-slate-800 text-slate-200 font-mono">
-        🔄 Checking backend status...
+      <div id="backend-status"
+           class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium bg-slate-800/80 border border-slate-600/60">
+        <span class="status-dot inline-block h-2 w-2 rounded-full bg-yellow-400"></span>
+        <span>Checking backend status…</span>
       </div>
+    </header>
 
-      <div class="card p-8 mt-2">
-        <h1 class="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
-          AI Stock Prediction Demo
-        </h1>
-        <p class="text-slate-400 mb-6 max-w-2xl">
-          Enter a series of historical closing prices (comma-separated). The backend will compute
-          an average return, volatility, and a simple next-day price prediction using your live API.
-        </p>
+    <!-- Main content -->
+    <main class="flex-1 flex items-center">
+      <div class="w-full max-w-5xl mx-auto px-4 py-10">
+        <div class="relative rounded-3xl glass-card p-8 md:p-10 overflow-hidden">
+          <div class="glow-ring"></div>
 
-        <label class="block text-sm font-medium text-slate-300 mb-2" for="price-input">
-          Price history
-          <span class="text-slate-500 text-xs">(e.g. 100, 102, 101, 105, 110)</span>
-        </label>
-        <input
-          id="price-input"
-          type="text"
-          class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
-          value="100, 102, 101, 105, 110"
-        />
+          <div class="flex flex-col lg:flex-row gap-10 items-start">
+            <!-- Left: description & input -->
+            <section class="flex-1 space-y-6">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-sky-400/80 mb-2">
+                  Live Experiment
+                </p>
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+                  AI Stock Prediction Demo
+                </h1>
+                <p class="text-slate-300 text-sm md:text-base leading-relaxed max-w-xl">
+                  Enter a short history of closing prices and this demo will call a small prediction
+                  service I built. It computes an average return, volatility, and a simple
+                  next-day price estimate using a lightweight model behind the scenes.
+                </p>
+              </div>
 
-        <button
-          id="run-btn"
-          class="mt-1 inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-semibold text-white transition disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          <span class="mr-2">
-            <i class="fas fa-chart-line"></i>
-          </span>
-          Run Prediction
-        </button>
+              <div class="space-y-3">
+                <label for="price-input" class="block text-sm font-medium text-slate-200">
+                  Price history
+                  <span class="ml-1 text-xs text-slate-400">(comma-separated, e.g. 100, 102, 101, 105, 110)</span>
+                </label>
+                <input
+                  id="price-input"
+                  type="text"
+                  class="w-full rounded-xl border border-slate-600 bg-slate-900/70 px-4 py-3 text-sm md:text-base
+                         text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-sky-500
+                         focus:border-sky-400 transition"
+                  placeholder="100, 102, 101, 105, 110"
+                />
 
-        <div id="error-msg" class="mt-4 text-sm text-red-400 hidden"></div>
+                <p id="form-error" class="text-sm text-rose-400 h-5"></p>
 
-        <div id="result-box" class="mt-6 hidden border-t border-slate-700 pt-4">
-          <h2 class="text-lg font-semibold text-slate-50 mb-2">Results</h2>
-          <div class="grid md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <div class="text-slate-400">Average Return</div>
-              <div id="avg-return" class="text-slate-50 font-mono mt-1">–</div>
-            </div>
-            <div>
-              <div class="text-slate-400">Volatility</div>
-              <div id="volatility" class="text-slate-50 font-mono mt-1">–</div>
-            </div>
-            <div>
-              <div class="text-slate-400">Next-Day Prediction</div>
-              <div id="next-price" class="text-slate-50 font-mono mt-1">–</div>
-            </div>
+                <button
+                  id="run-btn"
+                  class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r
+                         from-sky-500 via-indigo-500 to-emerald-400 px-5 py-2.5 text-sm md:text-base
+                         font-semibold text-slate-900 shadow-lg shadow-sky-500/30
+                         hover:from-sky-400 hover:via-indigo-400 hover:to-emerald-300
+                         active:scale-[0.98] transition transform">
+                  <i class="fa-solid fa-play"></i>
+                  <span>Run Prediction</span>
+                </button>
+
+                <p class="text-[11px] md:text-xs text-slate-500 pt-1">
+                  Note: For now this demo calls my backend directly.
+                  Once deployed, it will run on a cloud API instead of <code>localhost</code>.
+                </p>
+              </div>
+            </section>
+
+            <!-- Right: results panel -->
+            <section class="flex-1 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="stat-card rounded-2xl p-4">
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">Average return</p>
+                  <p id="avg-return" class="text-2xl font-semibold text-sky-300">—</p>
+                  <p class="text-[11px] text-slate-500 mt-1">Mean % change per step.</p>
+                </div>
+
+                <div class="stat-card rounded-2xl p-4">
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">Volatility</p>
+                  <p id="volatility" class="text-2xl font-semibold text-amber-300">—</p>
+                  <p class="text-[11px] text-slate-500 mt-1">Standard deviation of returns.</p>
+                </div>
+
+                <div class="stat-card rounded-2xl p-4">
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">Next-day price</p>
+                  <p id="next-price" class="text-2xl font-semibold text-emerald-300">—</p>
+                  <p class="text-[11px] text-slate-500 mt-1">Simple model prediction.</p>
+                </div>
+              </div>
+
+              <div class="rounded-2xl bg-slate-900/80 border border-slate-700 p-4 text-xs md:text-sm text-slate-300">
+                <p class="font-semibold mb-1 text-slate-200">How it works (at a glance)</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li>Prices are converted into log returns.</li>
+                  <li>The backend calculates mean return and volatility.</li>
+                  <li>A naive one-step forecast estimates the next closing price.</li>
+                </ul>
+              </div>
+
+              <p id="api-error" class="text-sm text-rose-400 h-5"></p>
+            </section>
           </div>
         </div>
+
+        <footer class="mt-6 text-[11px] md:text-xs text-slate-500 text-center">
+          © 2025 Christopher Alemao — Demo only, not financial advice.
+        </footer>
       </div>
-
-      <p class="mt-6 text-xs text-slate-500">
-        Note: This demo currently calls your backend at <code>http://localhost:4000</code>. To make it work on the internet,
-        deploy your backend and update the API base URL in the script.
-      </p>
-    </div>
-  </main>
-
-  <footer class="border-t border-slate-800 text-center text-xs text-slate-500 py-4">
-    © <span id="year"></span> Christopher Alemao
-  </footer>
+    </main>
+  </div>
 
   <script>
-    const API_BASE = "http://localhost:4000"; // change after deploying backend
+    // TODO: when you deploy your backend (Render / Railway / etc.), change this:
+    // Example: const API_BASE = "https://your-backend-service.onrender.com";
+    const API_BASE = "http://localhost:4000";
 
-    // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Backend health check badge
     const statusBox = document.getElementById("backend-status");
-    fetch(API_BASE + "/api/health")
-      .then(res => res.json())
-      .then(data => {
-        statusBox.style.backgroundColor = "#16a34a";
-        statusBox.textContent = "✅ Backend Online – " + (data.time || "");
-      })
-      .catch(() => {
-        statusBox.style.backgroundColor = "#b91c1c";
-        statusBox.textContent = "❌ Backend Offline (check server on port 4000)";
-      });
-
-    // Prediction logic
+    const apiError = document.getElementById("api-error");
+    const formError = document.getElementById("form-error");
     const runBtn = document.getElementById("run-btn");
-    const priceInput = document.getElementById("price-input");
-    const errorMsg = document.getElementById("error-msg");
-    const resultBox = document.getElementById("result-box");
-    const avgReturnEl = document.getElementById("avg-return");
-    const volatilityEl = document.getElementById("volatility");
-    const nextPriceEl = document.getElementById("next-price");
 
-    runBtn.addEventListener("click", () => {
-      errorMsg.classList.add("hidden");
-      resultBox.classList.add("hidden");
+    const avgEl = document.getElementById("avg-return");
+    const volEl = document.getElementById("volatility");
+    const nextEl = document.getElementById("next-price");
 
-      const raw = priceInput.value
-        .split(",")
-        .map(v => v.trim())
-        .filter(v => v.length > 0);
+    // ---- Backend health check ----
+    async function checkHealth() {
+      try {
+        const res = await fetch(API_BASE + "/api/health");
+        if (!res.ok) throw new Error("Health check failed");
+        const data = await res.json();
 
-      const prices = raw.map(Number).filter(v => !Number.isNaN(v));
+        statusBox.classList.add("status-pill-ok");
+        statusBox.classList.remove("status-pill-bad");
+        statusBox.innerHTML = `
+          <span class="status-dot inline-block h-2 w-2 rounded-full bg-emerald-700"></span>
+          <span class="hidden sm:inline">Backend Online</span>
+          <span class="sm:ml-2 text-[10px] sm:text-xs text-emerald-900/75">
+            ${data.time || ""}
+          </span>
+        `;
+      } catch (err) {
+        statusBox.classList.add("status-pill-bad");
+        statusBox.classList.remove("status-pill-ok");
+        statusBox.innerHTML = `
+          <span class="status-dot inline-block h-2 w-2 rounded-full bg-rose-800"></span>
+          <span>Backend Offline</span>
+        `;
+      }
+    }
 
-      if (prices.length < 3) {
-        errorMsg.textContent = "Please enter at least 3 valid numeric prices.";
-        errorMsg.classList.remove("hidden");
+    // ---- Prediction handler ----
+    async function runPrediction() {
+      formError.textContent = "";
+      apiError.textContent = "";
+
+      const inputEl = document.getElementById("price-input");
+      const raw = inputEl.value.trim();
+
+      if (!raw) {
+        formError.textContent = "Please enter at least a few prices.";
+        return;
+      }
+
+      const parts = raw.split(",").map(p => p.trim()).filter(Boolean);
+      const prices = parts.map(Number);
+
+      if (prices.some(p => Number.isNaN(p) || p <= 0)) {
+        formError.textContent = "All prices must be positive numbers (separated by commas).";
         return;
       }
 
       runBtn.disabled = true;
-      runBtn.textContent = "Running...";
+      runBtn.classList.add("opacity-70", "cursor-wait");
+      runBtn.querySelector("span").textContent = "Running…";
 
-      fetch(API_BASE + "/api/stock/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prices })
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("API error " + res.status);
-          return res.json();
-        })
-        .then(data => {
-          avgReturnEl.textContent =
-            (data.averageReturn != null ? (data.averageReturn * 100).toFixed(2) + "%" : "–");
-          volatilityEl.textContent =
-            (data.volatility != null ? (data.volatility * 100).toFixed(2) + "%" : "–");
-          nextPriceEl.textContent =
-            (data.nextDayPrediction != null ? data.nextDayPrediction.toFixed(2) : "–");
-
-          resultBox.classList.remove("hidden");
-        })
-        .catch(err => {
-          console.error(err);
-          errorMsg.textContent =
-            "Could not contact prediction API. Make sure your backend is running on port 4000.";
-          errorMsg.classList.remove("hidden");
-        })
-        .finally(() => {
-          runBtn.disabled = false;
-          runBtn.textContent = "Run Prediction";
+      try {
+        const res = await fetch(API_BASE + "/api/stock/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prices })
         });
+
+        if (!res.ok) {
+          throw new Error("API returned " + res.status);
+        }
+
+        const data = await res.json();
+
+        const avg = data.avgReturn ?? data.averageReturn;
+        const vol = data.volatility;
+        const next = data.nextPrice ?? data.predictedPrice;
+
+        avgEl.textContent = (avg * 100).toFixed(2) + "%";
+        volEl.textContent = (vol * 100).toFixed(2) + "%";
+        nextEl.textContent = next.toFixed(2);
+      } catch (err) {
+        console.error(err);
+        apiError.textContent = "Could not contact prediction API. Make sure the backend is running (or deployed).";
+      } finally {
+        runBtn.disabled = false;
+        runBtn.classList.remove("opacity-70", "cursor-wait");
+        runBtn.querySelector("span").textContent = "Run Prediction";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      checkHealth();
+      runBtn.addEventListener("click", runPrediction);
     });
   </script>
 </body>
