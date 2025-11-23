@@ -1,1 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MLOps Pipeline Framework | Christopher Alemao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, #6366f1 0, #020617 55%) fixed,
+        radial-gradient(circle at bottom right, #22c55e 0, #020617 55%) fixed;
+      background-blend-mode: screen;
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .pill {
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.5);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.9); }
+  </style>
+</head>
+<body class="text-slate-100">
+
+  <!-- HEADER -->
+  <header class="glass mx-auto max-w-6xl mt-6 mb-6 rounded-2xl px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <a href="index.html#projects"
+         class="pill px-4 py-1 text-sm text-slate-300 hover:text-sky-300 transition flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Projects
+      </a>
+
+      <div>
+        <h1 class="text-sm font-semibold text-sky-400 tracking-[0.25em] uppercase">
+          MLOps Pipeline Framework
+        </h1>
+        <p class="text-sm text-slate-400">
+          Production-grade pipeline for training, versioning, deploying and monitoring ML models.
+        </p>
+      </div>
+    </div>
+
+    <span class="pill px-4 py-1 text-xs flex items-center gap-2 text-emerald-300">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+      </span>
+      CI/CD • Kubernetes • Simulated
+    </span>
+  </header>
+
+  <!-- MAIN -->
+  <main class="mx-auto max-w-6xl px-4 pb-10 grid grid-cols-1 xl:grid-cols-[280px,1.6fr,320px] gap-6">
+
+    <!-- LEFT: Configuration panel -->
+    <aside class="glass rounded-2xl p-5 flex flex-col gap-5">
+      <div>
+        <h2 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sky-400"></i>
+          Pipeline configuration
+        </h2>
+        <p class="text-xs text-slate-500 mb-3">
+          Choose a model family, environment, and deployment pattern. The dashboard updates the simulated metrics and DAG.
+        </p>
+
+        <label class="block mb-3 text-xs text-slate-300">
+          Model family
+          <select id="model-family"
+                  class="mt-1 w-full bg-slate-950/70 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500">
+            <option value="tabular">Gradient Boosted Trees (tabular)</option>
+            <option value="nlp">NLP Transformer</option>
+            <option value="vision">Computer Vision CNN</option>
+          </select>
+        </label>
+
+        <label class="block mb-3 text-xs text-slate-300">
+          Target environment
+          <select id="environment"
+                  class="mt-1 w-full bg-slate-950/70 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500">
+            <option value="staging">Staging (pre-prod)</option>
+            <option value="prod" selected>Production (blue/green)</option>
+          </select>
+        </label>
+
+        <label class="block mb-3 text-xs text-slate-300">
+          Deployment strategy
+          <select id="deployment-strategy"
+                  class="mt-1 w-full bg-slate-950/70 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500">
+            <option value="rolling">Rolling update</option>
+            <option value="bluegreen" selected>Blue / green</option>
+            <option value="canary">Canary with auto rollback</option>
+          </select>
+        </label>
+
+        <label class="block mb-4 text-xs text-slate-300">
+          Retrain schedule
+          <select id="retrain-schedule"
+                  class="mt-1 w-full bg-slate-950/70 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500">
+            <option value="weekly">Weekly (cron)</option>
+            <option value="daily">Daily</option>
+            <option value="event">Data drift triggered</option>
+          </select>
+        </label>
+
+        <button id="run-planner"
+                class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-play"></i>
+          Recompute pipeline
+        </button>
+      </div>
+
+      <div class="border-t border-slate-700 pt-4 text-[11px] text-slate-500">
+        <p>
+          In the real implementation, this configuration drives a
+          GitOps-style workflow: feature pipelines, MLflow experiments, Docker image build,
+          and Kubernetes deployment with Prometheus hooks for monitoring.
+        </p>
+      </div>
+    </aside>
+
+    <!-- CENTER: DAG + run status -->
+    <section class="glass rounded-2xl p-5 flex flex-col gap-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-sky-300"></i>
+            Pipeline DAG
+          </h2>
+          <p class="text-xs text-slate-500">
+            Each stage is tracked as a Kubernetes job with MLflow logging metrics and artifacts.
+          </p>
+        </div>
+        <span id="run-status-badge"
+              class="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-900/40 border border-emerald-400/50 text-emerald-200">
+          Last run: healthy
+        </span>
+      </div>
+
+      <!-- DAG tiles -->
+      <div id="dag-container"
+           class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs text-slate-200">
+        <!-- tiles filled by JS -->
+      </div>
+
+      <!-- Recent runs table -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-indigo-300"></i>
+            Recent pipeline runs
+          </h3>
+          <span class="text-[11px] text-slate-500">
+            Simulated MLflow run history
+          </span>
+        </div>
+
+        <div class="overflow-auto -mx-2 px-2">
+          <table class="w-full text-[11px] text-left border-separate border-spacing-y-1">
+            <thead class="text-slate-400">
+              <tr>
+                <th class="py-1 pr-2">Run ID</th>
+                <th class="py-1 pr-2">Model</th>
+                <th class="py-1 pr-2 text-right">Accuracy</th>
+                <th class="py-1 pr-2 text-right">Latency</th>
+                <th class="py-1 pr-2 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="runs-body">
+              <!-- rows from JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Metrics + architecture -->
+    <aside class="flex flex-col gap-4">
+      <!-- Metrics -->
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-gauge-high text-emerald-300"></i>
+          Pipeline KPIs
+        </h3>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span>Training duration</span>
+            <span id="metric-train-time" class="font-semibold text-slate-100">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Best validation score</span>
+            <span id="metric-accuracy" class="font-semibold text-emerald-300">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>p95 prediction latency</span>
+            <span id="metric-latency" class="font-semibold text-sky-300">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Drift status</span>
+            <span id="metric-drift" class="font-semibold text-amber-300">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monitoring -->
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-heart-pulse text-rose-300"></i>
+          Monitoring & alerting
+        </h3>
+        <ul id="alerts-list" class="text-[11px] text-slate-300 space-y-1.5">
+          <!-- JS fills -->
+        </ul>
+      </div>
+
+      <!-- Architecture -->
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-indigo-300"></i>
+          Architecture summary
+        </h3>
+        <ul class="text-[11px] text-slate-300 space-y-1.5">
+          <li>• Feature pipelines scheduled via Airflow / cron.</li>
+          <li>• Training jobs run in Kubernetes with MLflow tracking.</li>
+          <li>• Best model containerized and pushed to registry.</li>
+          <li>• Deployment via blue/green or canary strategy.</li>
+          <li>• Prometheus + Grafana monitor latency, errors, drift.</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="mt-4 mb-6 text-[11px] text-slate-500 text-center">
+    © 2025 Christopher Alemao • MLOps Pipeline Framework Demo • UI: Tailwind + vanilla JS (simulated runs)
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const dagContainer = document.getElementById("dag-container");
+    const runsBody = document.getElementById("runs-body");
+    const trainTimeEl = document.getElementById("metric-train-time");
+    const accEl = document.getElementById("metric-accuracy");
+    const latencyEl = document.getElementById("metric-latency");
+    const driftEl = document.getElementById("metric-drift");
+    const alertsListEl = document.getElementById("alerts-list");
+    const runStatusBadge = document.getElementById("run-status-badge");
+
+    const modelFamilyEl = document.getElementById("model-family");
+    const envEl = document.getElementById("environment");
+    const deployEl = document.getElementById("deployment-strategy");
+    const retrainEl = document.getElementById("retrain-schedule");
+
+    const baseStages = [
+      { id: "ingest",  label: "Data ingestion",          icon: "fa-database" },
+      { id: "features",label: "Feature engineering",     icon: "fa-gears" },
+      { id: "train",   label: "Model training",          icon: "fa-brain" },
+      { id: "deploy",  label: "Deploy & monitor",        icon: "fa-rocket" },
+    ];
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function recomputePipeline() {
+      const model = modelFamilyEl.value;
+      const env = envEl.value;
+      const deploy = deployEl.value;
+      const retrain = retrainEl.value;
+
+      // --- KPIs ---
+      let trainTime, acc, latency, driftScore;
+
+      if (model === "tabular") {
+        trainTime = randomBetween(8, 20);    // minutes
+        acc = randomBetween(0.86, 0.93);
+        latency = randomBetween(12, 25);     // ms
+      } else if (model === "nlp") {
+        trainTime = randomBetween(45, 120);
+        acc = randomBetween(0.89, 0.96);
+        latency = randomBetween(70, 160);
+      } else { // vision
+        trainTime = randomBetween(30, 90);
+        acc = randomBetween(0.88, 0.95);
+        latency = randomBetween(35, 80);
+      }
+
+      driftScore = randomBetween(0.02, 0.18); // 0–1
+
+      trainTimeEl.textContent = trainTime.toFixed(1) + " min";
+      accEl.textContent = (acc * 100).toFixed(2) + " %";
+      latencyEl.textContent = latency.toFixed(0) + " ms";
+      driftEl.textContent = driftScore < 0.1 ? "Stable" : "Mild drift";
+
+      driftEl.className =
+        "font-semibold " + (driftScore < 0.1 ? "text-emerald-300" : "text-amber-300");
+
+      // --- Badge ---
+      const anyRisk = driftScore > 0.14 || deploy === "canary";
+      runStatusBadge.textContent = anyRisk ? "Last run: watch" : "Last run: healthy";
+      runStatusBadge.className =
+        "px-2.5 py-0.5 rounded-full text-[10px] border " +
+        (anyRisk
+          ? "bg-amber-900/40 border-amber-400/60 text-amber-200"
+          : "bg-emerald-900/40 border-emerald-400/60 text-emerald-200");
+
+      // --- DAG tiles ---
+      dagContainer.innerHTML = "";
+      baseStages.forEach((stage, idx) => {
+        const tile = document.createElement("div");
+        const isCurrent = idx === 2; // training
+        tile.className =
+          "relative rounded-2xl border px-3 py-3 flex flex-col gap-1 " +
+          "border-slate-700 bg-slate-950/60";
+
+        const extra =
+          idx === 3 && deploy === "canary"
+            ? "Canary rollout with live metrics"
+            : idx === 3 && deploy === "bluegreen"
+            ? "Blue/green switch after health checks"
+            : idx === 3
+            ? "Rolling update across pods"
+            : idx === 2 && model === "nlp"
+            ? "Distributed training with GPUs"
+            : idx === 2 && model === "vision"
+            ? "Augmentation + mixed precision"
+            : "Batch processing with retries";
+
+        tile.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid ${stage.icon} text-xs text-sky-300"></i>
+              </span>
+              <div class="text-[11px] font-semibold">${stage.label}</div>
+            </div>
+            <span class="text-[10px] ${isCurrent ? "text-emerald-300" : "text-slate-500"}">
+              ${isCurrent ? "active" : "ready"}
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">${extra}</p>
+        `;
+        dagContainer.appendChild(tile);
+      });
+
+      // --- Runs history ---
+      const runs = [];
+      for (let i = 0; i < 5; i++) {
+        const thisAcc = acc - randomBetween(0, 0.03);
+        const thisLat = latency + randomBetween(-10, 20);
+        const status = i === 0 ? "Production" : "Archived";
+        runs.push({
+          id: "RUN-" + (1543 + i),
+          model:
+            model === "tabular"
+              ? "GBM"
+              : model === "nlp"
+              ? "Transformer"
+              : "ResNet",
+          acc: thisAcc,
+          lat: thisLat,
+          status,
+        });
+      }
+
+      runsBody.innerHTML = runs
+        .map(
+          (r) => `
+        <tr class="glass bg-slate-950/70">
+          <td class="py-1 pr-2">${r.id}</td>
+          <td class="py-1 pr-2">${r.model}</td>
+          <td class="py-1 pr-2 text-right">${(r.acc * 100).toFixed(2)} %</td>
+          <td class="py-1 pr-2 text-right">${r.lat.toFixed(0)} ms</td>
+          <td class="py-1 pr-2 text-right">
+            <span class="px-2 py-0.5 rounded-full text-[10px] ${
+              r.status === "Production"
+                ? "bg-emerald-900/60 text-emerald-200"
+                : "bg-slate-800 text-slate-300"
+            }">
+              ${r.status}
+            </span>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+
+      // --- Alerts / monitoring ---
+      const alerts = [];
+      if (driftScore > 0.14) {
+        alerts.push("⚠ Data drift score above threshold – queued for retrain.");
+      } else {
+        alerts.push("✅ No significant data drift detected in last 24h.");
+      }
+
+      if (env === "prod" && deploy === "canary") {
+        alerts.push("✅ Canary health checks passed in all regions.");
+      } else if (env === "prod") {
+        alerts.push("✅ All production pods healthy.");
+      }
+
+      if (retrain === "event") {
+        alerts.push("ℹ Retrain is event-driven: new data + drift trigger a new run.");
+      } else if (retrain === "daily") {
+        alerts.push("ℹ Daily scheduled retrain with automatic model comparison.");
+      } else {
+        alerts.push("ℹ Weekly retrain with human-in-the-loop approval.");
+      }
+
+      alertsListEl.innerHTML = alerts
+        .map(
+          (a) => `
+        <li class="flex items-start gap-2">
+          <span class="mt-[2px] text-sky-300">•</span>
+          <span>${a}</span>
+        </li>
+      `
+        )
+        .join("");
+    }
+
+    document.getElementById("run-planner").addEventListener("click", recomputePipeline);
+
+    // Initial render
+    recomputePipeline();
+  </script>
+</body>
+</html>
