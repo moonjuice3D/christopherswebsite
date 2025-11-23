@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Real-time Chat Application | Christopher Alemao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, #6d28d9 0, #020617 55%) fixed,
+        radial-gradient(circle at bottom right, #22c55e 0, #020617 55%) fixed;
+      background-blend-mode: screen;
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .pill {
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.5);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.9); }
+  </style>
+</head>
+<body class="text-slate-100">
+
+  <!-- Top bar -->
+  <header class="glass mx-auto max-w-6xl mt-6 mb-4 rounded-2xl px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- Back to projects on portfolio -->
+      <a href="index.htm#projects"
+         class="pill px-4 py-1 text-sm text-slate-300 hover:text-sky-300 transition flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Portfolio
+      </a>
+      <div class="hidden sm:flex flex-col">
+        <span class="text-xs uppercase tracking-[0.2em] text-sky-400">Real-time Chat Application</span>
+        <span class="text-sm text-slate-400">
+          WebSocket-style demo with message stream, latency, and encryption indicators
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="pill px-4 py-1 text-xs flex items-center gap-2 text-emerald-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+        </span>
+        WebSocket • Simulated
+      </span>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="mx-auto max-w-6xl pb-10 px-4 sm:px-0">
+    <div class="grid grid-cols-1 lg:grid-cols-[260px,1.6fr,0.9fr] gap-6">
+      <!-- LEFT: Channels / presence -->
+      <aside class="glass rounded-2xl p-5 flex flex-col gap-5">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-200 mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-hashtag text-sky-400"></i>
+            Channels
+          </h2>
+          <p class="text-xs text-slate-500 mb-3">
+            Switch rooms to simulate multi-channel WebSocket routing.
+          </p>
+
+          <div id="channel-list" class="flex flex-col gap-2 text-sm">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <div class="border-t border-slate-700 pt-4">
+          <h2 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-user-group text-emerald-400"></i>
+            Presence
+          </h2>
+          <ul id="presence-list" class="text-xs text-slate-300 space-y-1.5">
+            <!-- filled by JS -->
+          </ul>
+        </div>
+
+        <div class="mt-auto text-[11px] text-slate-500 border-t border-slate-700 pt-3">
+          <p>
+            In a real deployment, Socket.io would handle fan-out, Redis would back pub/sub for scaling, and E2E crypto
+            would ride on top of the message payloads.
+          </p>
+        </div>
+      </aside>
+
+      <!-- CENTER: Chat window -->
+      <section class="glass rounded-2xl p-5 flex flex-col">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-comments text-sky-400"></i>
+              <span id="current-room-label">#trading-floor</span>
+            </h2>
+            <p class="text-xs text-slate-500">
+              Simulated live chat stream with client-side message history.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-[11px]">
+            <span id="socket-status-dot" class="inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span id="socket-status-text" class="text-emerald-300">Connected</span>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="message-container"
+             class="flex-1 overflow-auto rounded-2xl bg-slate-950/60 border border-slate-800 p-4 space-y-3 mb-4">
+          <!-- bubbles injected by JS -->
+        </div>
+
+        <!-- Composer -->
+        <div class="mt-2 flex items-end gap-2">
+          <div class="flex-1">
+            <label class="block text-[11px] text-slate-400 mb-1">Message</label>
+            <textarea
+              id="message-input"
+              rows="2"
+              class="w-full bg-slate-950/60 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-sky-500 resize-none"
+              placeholder="Type a message and hit Send…"
+            ></textarea>
+          </div>
+          <button
+            id="send-btn"
+            class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-sm rounded-xl flex items-center gap-2 transition"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            Send
+          </button>
+        </div>
+
+        <div class="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-lock text-emerald-300"></i>
+            <span id="encryption-label">End-to-end encryption: enabled (simulated AES-GCM)</span>
+          </div>
+          <button id="toggle-encryption" class="text-sky-300 hover:text-sky-200">
+            Toggle
+          </button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Metrics / architecture -->
+      <aside class="flex flex-col gap-4">
+        <div class="glass rounded-2xl px-4 py-3">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+            <span>Messages (current room)</span>
+            <i class="fa-solid fa-chart-bar text-indigo-300"></i>
+          </div>
+          <div id="metric-messages" class="text-2xl font-semibold text-slate-100">0</div>
+          <p class="text-[11px] text-slate-500 mt-1">
+            Aggregated client-side for demo; normally tracked via analytics or Redis streams.
+          </p>
+        </div>
+
+        <div class="glass rounded-2xl px-4 py-3">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+            <span>Avg. simulated latency</span>
+            <i class="fa-solid fa-bolt text-amber-300"></i>
+          </div>
+          <div id="metric-latency" class="text-2xl font-semibold text-emerald-300">12 ms</div>
+          <p class="text-[11px] text-slate-500 mt-1">
+            Randomized per message to mimic WebSocket hop time.
+          </p>
+        </div>
+
+        <div class="glass rounded-2xl p-4">
+          <h2 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-sky-300"></i>
+            Architecture snapshot
+          </h2>
+          <ul class="text-[11px] text-slate-300 space-y-1.5">
+            <li>• Vue.js client connects via Socket.io over WSS.</li>
+            <li>• Node.js + Socket.io gateway handles rooms & auth.</li>
+            <li>• Redis pub/sub layer fans out messages across pods.</li>
+            <li>• Optional Redis streams or DB for long-term history.</li>
+            <li>• E2E encryption wraps payload before send/receive.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="mt-8 text-[11px] text-slate-500 text-center">
+      © 2025 Christopher Alemao • Real-time Chat Application Demo • UI: Tailwind + vanilla JS (simulated Socket.io)
+    </footer>
+  </main>
+
+  <script>
+    // --- Demo data ---------------------------------------------------------
+    const channels = [
+      { id: "trading-floor", label: "#trading-floor", users: ["QuantBot", "RiskEngine", "Trader-01"] },
+      { id: "devops", label: "#devops", users: ["CICD-Bot", "PagerDuty", "SRE-Lead"] },
+      { id: "ml-research", label: "#ml-research", users: ["NLP-Agent", "Vision-Model", "RL-Engine"] },
+    ];
+
+    const cannedMessages = {
+      "trading-floor": [
+        { author: "QuantBot", text: "Pushed latest risk limits for BTC-USD.", role: "bot" },
+        { author: "Trader-01", text: "Copy that. Watching order book depth.", role: "user" },
+        { author: "RiskEngine", text: "VaR remains within intraday thresholds.", role: "bot" },
+      ],
+      "devops": [
+        { author: "CICD-Bot", text: "Deployment to prod succeeded (v2.13.0).", role: "bot" },
+        { author: "SRE-Lead", text: "Monitoring 5xx error rate for the next 30 minutes.", role: "user" },
+        { author: "PagerDuty", text: "All services healthy.", role: "bot" },
+      ],
+      "ml-research": [
+        { author: "NLP-Agent", text: "New sentiment model deployed to shadow mode.", role: "bot" },
+        { author: "Vision-Model", text: "Batch inference job completed on 10k images.", role: "bot" },
+        { author: "RL-Engine", text: "Exploration policy tuned for lower drawdown.", role: "bot" },
+      ],
+    };
+
+    const state = {
+      currentChannel: "trading-floor",
+      messages: {
+        "trading-floor": [],
+        "devops": [],
+        "ml-research": [],
+      },
+      encryptionEnabled: true,
+      simulatedLatencies: [],
+    };
+
+    // --- DOM elements ------------------------------------------------------
+    const channelListEl = document.getElementById("channel-list");
+    const presenceListEl = document.getElementById("presence-list");
+    const roomLabelEl = document.getElementById("current-room-label");
+    const messageContainerEl = document.getElementById("message-container");
+    const messageInputEl = document.getElementById("message-input");
+    const sendBtnEl = document.getElementById("send-btn");
+    const encryptionLabelEl = document.getElementById("encryption-label");
+    const toggleEncryptionBtn = document.getElementById("toggle-encryption");
+    const metricMessagesEl = document.getElementById("metric-messages");
+    const metricLatencyEl = document.getElementById("metric-latency");
+
+    // --- Helpers -----------------------------------------------------------
+    function randomLatency() {
+      // 8–60 ms, skewed low
+      return Math.round(8 + Math.random() * 52);
+    }
+
+    function addLatencySample(v) {
+      state.simulatedLatencies.push(v);
+      if (state.simulatedLatencies.length > 40) {
+        state.simulatedLatencies.shift();
+      }
+      const avg =
+        state.simulatedLatencies.reduce((a, b) => a + b, 0) /
+        (state.simulatedLatencies.length || 1);
+      metricLatencyEl.textContent = `${Math.round(avg)} ms`;
+    }
+
+    function encryptText(text) {
+      if (!state.encryptionEnabled) return text;
+      // Toy "encryption": base64-encode to hint at E2E without real crypto
+      try {
+        return btoa(text).slice(0, 80) + (text.length > 0 ? "…" : "");
+      } catch {
+        return text;
+      }
+    }
+
+    function renderChannels() {
+      channelListEl.innerHTML = "";
+      channels.forEach((ch) => {
+        const isActive = ch.id === state.currentChannel;
+        const btn = document.createElement("button");
+        btn.className =
+          "w-full text-left px-3 py-2 rounded-xl border text-xs flex items-center justify-between transition " +
+          (isActive
+            ? "border-sky-500 bg-sky-900/40 text-sky-100"
+            : "border-slate-700 bg-slate-900/70 text-slate-300 hover:border-sky-500 hover:text-sky-200");
+        btn.innerHTML = `
+          <div>
+            <div class="font-semibold">${ch.label}</div>
+            <div class="text-[11px] text-slate-500">${ch.users.length} active</div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-[10px] ${isActive ? "text-sky-300" : "text-slate-500"}"></i>
+        `;
+        btn.addEventListener("click", () => {
+          state.currentChannel = ch.id;
+          roomLabelEl.textContent = ch.label;
+          renderChannels();
+          renderPresence();
+          renderMessages();
+        });
+        channelListEl.appendChild(btn);
+      });
+    }
+
+    function renderPresence() {
+      const ch = channels.find((c) => c.id === state.currentChannel);
+      if (!ch) return;
+      presenceListEl.innerHTML = ch.users
+        .map(
+          (u) => `
+        <li class="flex items-center justify-between">
+          <span>${u}</span>
+          <span class="inline-flex items-center gap-1 text-[10px] text-emerald-300">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+            online
+          </span>
+        </li>
+      `
+        )
+        .join("");
+    }
+
+    function renderMessages() {
+      const msgs = state.messages[state.currentChannel] || [];
+      metricMessagesEl.textContent = String(msgs.length);
+
+      messageContainerEl.innerHTML = "";
+      msgs.forEach((m) => {
+        const isSelf = m.role === "self";
+        const bubble = document.createElement("div");
+        bubble.className =
+          "flex " + (isSelf ? "justify-end" : "justify-start");
+
+        const inner = document.createElement("div");
+        inner.className =
+          "max-w-[80%] rounded-2xl px-3 py-2 text-xs shadow " +
+          (isSelf
+            ? "bg-sky-500 text-slate-950 rounded-br-sm"
+            : "bg-slate-800 text-slate-100 rounded-bl-sm");
+
+        inner.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-0.5">
+            <span class="font-semibold text-[11px] ${isSelf ? "text-slate-950/80" : "text-sky-300"}">
+              ${m.author}
+            </span>
+            <span class="text-[10px] ${isSelf ? "text-slate-900/70" : "text-slate-500"}">
+              ${m.time}
+            </span>
+          </div>
+          <div class="whitespace-pre-wrap">${m.text}</div>
+          <div class="mt-1 flex items-center justify-between text-[9px] ${isSelf ? "text-slate-900/70" : "text-slate-500"}">
+            <span><i class="fa-solid fa-lock ${m.encrypted ? "text-emerald-300" : "text-slate-500"} mr-1"></i>${m.encrypted ? "E2E on" : "E2E off"}</span>
+            <span>${m.latency} ms</span>
+          </div>
+        `;
+        bubble.appendChild(inner);
+        messageContainerEl.appendChild(bubble);
+      });
+
+      messageContainerEl.scrollTop = messageContainerEl.scrollHeight;
+    }
+
+    function pushMessage({ channelId, author, text, role }) {
+      const chId = channelId || state.currentChannel;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const latency = randomLatency();
+      addLatencySample(latency);
+
+      const msg = {
+        author,
+        text: state.encryptionEnabled ? encryptText(text) : text,
+        rawText: text,
+        role,
+        time: timeStr,
+        latency,
+        encrypted: state.encryptionEnabled,
+      };
+      state.messages[chId].push(msg);
+      if (state.messages[chId].length > 60) {
+        state.messages[chId].shift();
+      }
+
+      if (chId === state.currentChannel) {
+        renderMessages();
+      }
+    }
+
+    // --- Event wiring ------------------------------------------------------
+    sendBtnEl.addEventListener("click", () => {
+      const text = messageInputEl.value.trim();
+      if (!text) return;
+      pushMessage({
+        channelId: state.currentChannel,
+        author: "You",
+        text,
+        role: "self",
+      });
+      messageInputEl.value = "";
+      messageInputEl.focus();
+    });
+
+    messageInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendBtnEl.click();
+      }
+    });
+
+    toggleEncryptionBtn.addEventListener("click", () => {
+      state.encryptionEnabled = !state.encryptionEnabled;
+      encryptionLabelEl.textContent = state.encryptionEnabled
+        ? "End-to-end encryption: enabled (simulated AES-GCM)"
+        : "End-to-end encryption: disabled";
+      renderMessages();
+    });
+
+    // --- Simulated incoming messages ("Socket.io") ------------------------
+    function seedChannelHistory() {
+      channels.forEach((ch) => {
+        (cannedMessages[ch.id] || []).forEach((m) => {
+          pushMessage({
+            channelId: ch.id,
+            author: m.author,
+            text: m.text,
+            role: m.role,
+          });
+        });
+      });
+    }
+
+    function startSimulatedSocket() {
+      setInterval(() => {
+        const ch = channels[Math.floor(Math.random() * channels.length)];
+        const sample =
+          (cannedMessages[ch.id] || [])[Math.floor(Math.random() * (cannedMessages[ch.id] || []).length)];
+
+        if (!sample) return;
+
+        const jitterTextVariants = [
+          "",
+          " (snapshot)",
+          " [auto]",
+          " (update)",
+        ];
+        const variant =
+          jitterTextVariants[
+            Math.floor(Math.random() * jitterTextVariants.length)
+          ];
+
+        pushMessage({
+          channelId: ch.id,
+          author: sample.author,
+          text: sample.text + variant,
+          role: sample.role,
+        });
+      }, 5500);
+    }
+
+    // --- Init --------------------------------------------------------------
+    (function init() {
+      renderChannels();
+      renderPresence();
+      seedChannelHistory();
+      renderMessages();
+      startSimulatedSocket();
+    })();
+  </script>
+</body>
+</html>
