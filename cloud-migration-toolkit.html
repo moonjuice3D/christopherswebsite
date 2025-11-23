@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cloud Migration Toolkit | Christopher Alemao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, #1d4ed8 0, #020617 55%) fixed,
+        radial-gradient(circle at bottom right, #22c55e 0, #020617 55%) fixed;
+      background-blend-mode: screen;
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .pill {
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.5);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.9); }
+  </style>
+</head>
+<body class="text-slate-100">
+
+  <!-- Top bar -->
+  <header class="glass mx-auto max-w-6xl mt-6 mb-4 rounded-2xl px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- IMPORTANT: back to projects section on index -->
+      <a href="index.htm#projects"
+         class="pill px-4 py-1 text-sm text-slate-300 hover:text-sky-300 transition flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Portfolio
+      </a>
+      <div class="hidden sm:flex flex-col">
+        <span class="text-xs uppercase tracking-[0.2em] text-sky-400">Cloud Migration Toolkit</span>
+        <span class="text-sm text-slate-400">
+          On-prem → AWS migration with cost & compliance simulation
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="pill px-4 py-1 text-xs flex items-center gap-2 text-emerald-300">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+        </span>
+        Live Demo • Simulated
+      </span>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="mx-auto max-w-6xl pb-10 px-4 sm:px-0">
+    <div class="grid grid-cols-1 lg:grid-cols-[320px,1fr] gap-6">
+      <!-- LEFT: Workload form -->
+      <aside class="glass rounded-2xl p-5 flex flex-col gap-5">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-200 mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
+            Workload profile
+          </h2>
+          <p class="text-xs text-slate-500 mb-3">
+            Describe the on-prem footprint and let the toolkit propose an AWS landing zone.
+          </p>
+
+          <label class="block mb-3 text-xs text-slate-300">
+            Monthly compute hours
+            <input
+              id="compute-hours"
+              type="number"
+              min="10"
+              value="1200"
+              class="mt-1 w-full bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500"
+            />
+          </label>
+
+          <label class="block mb-3 text-xs text-slate-300">
+            Storage (TB)
+            <input
+              id="storage-tb"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="5"
+              class="mt-1 w-full bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500"
+            />
+          </label>
+
+          <label class="block mb-3 text-xs text-slate-300">
+            Criticality
+            <select
+              id="criticality"
+              class="mt-1 w-full bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
+            >
+              <option value="dev">Non-prod / Dev</option>
+              <option value="standard" selected>Business-critical</option>
+              <option value="regulated">Regulated / PII heavy</option>
+            </select>
+          </label>
+
+          <label class="block mb-4 text-xs text-slate-300">
+            Compliance requirements
+            <select
+              id="compliance"
+              class="mt-1 w-full bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
+            >
+              <option value="none">None / basic</option>
+              <option value="soc2">SOC2</option>
+              <option value="hipaa">HIPAA-style</option>
+              <option value="pci">PCI-like</option>
+            </select>
+          </label>
+
+          <button
+            id="run-planner"
+            class="w-full mt-1 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 transition"
+          >
+            <i class="fa-solid fa-play"></i>
+            Run migration planner
+          </button>
+        </div>
+
+        <div class="border-t border-slate-700 pt-4 text-[11px] text-slate-500">
+          <p>
+            This demo approximates AWS costs with a light-weight model (EC2 + S3 + data transfer) and overlays
+            compliance guardrails (AWS CDK + Terraform) to show how infrastructure as code would look in a real engagement.
+          </p>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Results -->
+      <section class="flex flex-col gap-5">
+        <!-- KPI cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="glass rounded-2xl px-4 py-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <span>Est. on-prem monthly cost</span>
+              <i class="fa-solid fa-building text-slate-500"></i>
+            </div>
+            <div id="onprem-cost" class="text-2xl font-semibold text-slate-100">$–</div>
+            <p class="text-[11px] text-slate-500 mt-1">
+              Rough TCO including hardware, power, cooling.
+            </p>
+          </div>
+
+          <div class="glass rounded-2xl px-4 py-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <span>Projected AWS monthly</span>
+              <i class="fa-brands fa-aws text-amber-300"></i>
+            </div>
+            <div id="aws-cost" class="text-2xl font-semibold text-emerald-300">$–</div>
+            <p class="text-[11px] text-slate-500 mt-1">
+              Modeled with burstable EC2 + S3 standard / infrequent access.
+            </p>
+          </div>
+
+          <div class="glass rounded-2xl px-4 py-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+              <span>Cost delta</span>
+              <i class="fa-solid fa-arrow-trend-down text-sky-300"></i>
+            </div>
+            <div id="savings" class="text-2xl font-semibold text-sky-300">–%</div>
+            <p class="text-[11px] text-slate-500 mt-1">
+              Positive = AWS is cheaper than current on-prem estimate.
+            </p>
+          </div>
+        </div>
+
+        <!-- IaC + Compliance + Timeline -->
+        <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.4fr),minmax(0,1fr)] gap-5">
+          <!-- IaC Preview -->
+          <div class="glass rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                <i class="fa-solid fa-code text-emerald-400"></i>
+                Infrastructure as Code sketch
+              </h2>
+              <span
+                id="iac-stack-label"
+                class="px-2 py-0.5 rounded-full bg-slate-900/70 border border-slate-600 text-[10px] text-slate-300"
+              >
+                CDK + Terraform
+              </span>
+            </div>
+
+            <pre
+              id="iac-preview"
+              class="text-[11px] leading-relaxed overflow-auto max-h-64 bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-emerald-200"
+            ># Click “Run migration planner” to generate a CDK & Terraform sketch…</pre>
+          </div>
+
+          <!-- Compliance + Timeline -->
+          <div class="flex flex-col gap-4">
+            <div class="glass rounded-2xl p-4">
+              <h2 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-300"></i>
+                Compliance guardrails
+              </h2>
+              <ul id="guardrails" class="text-[11px] text-slate-300 space-y-1.5">
+                <!-- filled by JS -->
+              </ul>
+            </div>
+
+            <div class="glass rounded-2xl p-4">
+              <h2 class="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-timeline text-sky-300"></i>
+                Migration phases
+              </h2>
+              <ol id="timeline" class="text-[11px] text-slate-300 space-y-1.5">
+                <!-- filled by JS -->
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="mt-8 text-[11px] text-slate-500 text-center">
+      © 2025 Christopher Alemao • Cloud Migration Toolkit Demo • UI: Tailwind + vanilla JS (simulated data)
+    </footer>
+  </main>
+
+  <script>
+    function formatCurrency(n) {
+      return n.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      });
+    }
+
+    const onpremCostEl = document.getElementById("onprem-cost");
+    const awsCostEl = document.getElementById("aws-cost");
+    const savingsEl = document.getElementById("savings");
+    const iacPreviewEl = document.getElementById("iac-preview");
+    const guardrailsEl = document.getElementById("guardrails");
+    const timelineEl = document.getElementById("timeline");
+    const iacStackLabelEl = document.getElementById("iac-stack-label");
+
+    function runPlanner() {
+      const compute = Number(document.getElementById("compute-hours").value || 0);
+      const storage = Number(document.getElementById("storage-tb").value || 0);
+      const criticality = document.getElementById("criticality").value;
+      const compliance = document.getElementById("compliance").value;
+
+      // VERY rough toy model – just to show thinking
+      const onprem = compute * 0.45 + storage * 210 + 900; // “fat” on-prem TCO
+      let aws = compute * 0.29 + storage * 95 + 150;       // leaner AWS estimate
+
+      if (criticality === "regulated") aws *= 1.18;
+      if (compliance === "pci" || compliance === "hipaa") aws *= 1.12;
+
+      const delta = ((onprem - aws) / onprem) * 100;
+
+      onpremCostEl.textContent = formatCurrency(onprem);
+      awsCostEl.textContent = formatCurrency(aws);
+
+      const roundedDelta = delta.toFixed(1);
+      savingsEl.textContent = `${roundedDelta}%`;
+      savingsEl.className =
+        "text-2xl font-semibold " + (delta >= 0 ? "text-emerald-300" : "text-rose-300");
+
+      // CDK vs CDK+Terraform toggle
+      const useCdkOnly = criticality === "dev" && compliance === "none";
+      iacStackLabelEl.textContent = useCdkOnly ? "AWS CDK" : "CDK + Terraform";
+
+      const envName = criticality === "dev" ? "dev" : "prod";
+
+      const cdkSnippet = `
+from aws_cdk import (
+    Stack,
+    aws_ec2 as ec2,
+    aws_rds as rds,
+    aws_s3 as s3,
+)
+from constructs import Construct
+
+class MigrationStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs):
+        super().__init__(scope, construct_id, **kwargs)
+
+        vpc = ec2.Vpc(self, "vpc-${envName}",
+            max_azs=3,
+            nat_gateways=1
+        )
+
+        bucket = s3.Bucket(self, "data-lake",
+            versioned=True,
+            encryption=s3.BucketEncryption.S3_MANAGED
+        )
+
+        db = rds.DatabaseInstance(self, "app-db",
+            engine=rds.DatabaseInstanceEngine.POSTGRES,
+            vpc=vpc,
+            multi_az=${criticality !== "dev"},
+            storage_encrypted=True
+        )
+`;
+
+      const tfSnippet = `
+resource "aws_security_group" "app_sg" {
+  name        = "app-sg-${envName}"
+  description = "App security group"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "company-${envName}-access-logs"
+  acl    = "log-delivery-write"
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+`;
+
+      iacPreviewEl.textContent =
+        cdkSnippet + (useCdkOnly ? "\n# Terraform optional for this workload…" : "\n" + tfSnippet);
+
+      // Guardrails list
+      const guardrails = [];
+      guardrails.push("✔ Encrypted S3 buckets (at rest) for migrated data.");
+      guardrails.push("✔ VPC-isolated compute with restricted security groups.");
+      if (criticality !== "dev") {
+        guardrails.push("✔ Multi-AZ database for HA & failover.");
+      }
+      if (compliance === "pci" || compliance === "hipaa") {
+        guardrails.push("✔ Centralized access logging + Config rules for drift detection.");
+      }
+      if (compliance === "soc2") {
+        guardrails.push("✔ SOC2-aligned backups, retention, and change tracking.");
+      }
+
+      guardrailsEl.innerHTML = guardrails
+        .map(item => `
+          <li class="flex gap-2 items-start">
+            <span class="mt-[2px] text-emerald-400">•</span>
+            <span>${item}</span>
+          </li>
+        `)
+        .join("");
+
+      // Migration phases
+      const phases = [
+        "Discovery & assessment of current workloads.",
+        "Design of target AWS landing zone & network topology.",
+        "Set up of CI/CD + IaC (CDK / Terraform) pipelines.",
+        "Pilot migration of a low-risk workload.",
+        "Parallel run, cutover, and decommissioning of on-prem assets."
+      ];
+
+      timelineEl.innerHTML = phases
+        .map((p, i) => `
+          <li>
+            <span class="text-sky-400 font-semibold mr-1">Phase ${i + 1}.</span>${p}
+          </li>
+        `)
+        .join("");
+    }
+
+    document.getElementById("run-planner").addEventListener("click", runPlanner);
+
+    // Run once on load so page doesn't look empty
+    runPlanner();
+  </script>
+</body>
+</html>
