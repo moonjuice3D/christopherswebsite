@@ -85,15 +85,9 @@
         }
 
         @keyframes glow-move {
-            0% {
-                transform: translate(0, 0);
-            }
-            50% {
-                transform: translate(24px, 40px);
-            }
-            100% {
-                transform: translate(-18px, 12px);
-            }
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(24px, 40px); }
+            100% { transform: translate(-18px, 12px); }
         }
         
         .project-card,
@@ -109,19 +103,31 @@
                         rgba(15,23,42,0.92);
         }
 
+        /* animated overlay but non-blocking for clicks */
         .project-card::before {
             content: "";
             position: absolute;
             inset: -40%;
-            background: conic-gradient(from 140deg, rgba(59,130,246,0.2), rgba(16,185,129,0.2), transparent, rgba(59,130,246,0.3));
+            background: conic-gradient(from 140deg,
+                                       rgba(59,130,246,0.2),
+                                       rgba(16,185,129,0.2),
+                                       transparent,
+                                       rgba(59,130,246,0.3));
             opacity: 0;
             transition: opacity 0.4s ease, transform 0.4s ease;
             transform: translate3d(-10px, 0, 0);
+            pointer-events: none; /* key fix so links work */
+            z-index: 0;
         }
 
         .project-card:hover::before {
             opacity: 1;
             transform: translate3d(0, 0, 0);
+        }
+
+        .project-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .project-card:hover {
@@ -211,7 +217,7 @@
             border: 1px solid rgba(148,163,184,0.6);
         }
 
-        /* Brand-specific colors for tech icons */
+        /* Brand-specific colors for tech icons (kept from your original) */
         .devicon-python-plain { color: #3776AB; }
         .devicon-java-plain { color: #007396; }
         .devicon-javascript-plain { color: #F7DF1E; }
@@ -391,7 +397,7 @@
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Fin-Viz -->
-                <div class="project-card bg-gray-900/90 p-6 rounded-xl border border-gray-700 fade-in-section">
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Fin-Viz Dashboard</h3>
                     <p class="text-gray-300 mb-4">
                         A full-stack financial data visualization dashboard for tracking real-time stock and crypto performance using the MERN stack.
@@ -402,7 +408,7 @@
                         <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
                     </div>
                     <div class="mt-6 flex items-center space-x-4">
-                        <!-- IMPORTANT: Correct Fin-Viz demo link -->
+                        <!-- Correct Fin-Viz demo link -->
                         <a href="fin-viz-dashboard.html" class="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300">
                             Live Demo &rarr;
                         </a>
@@ -413,7 +419,7 @@
                 </div>
 
                 <!-- AI Stock -->
-                <div class="project-card bg-gray-900/90 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 100ms;">
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 100ms;">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">AI Stock Prediction Model</h3>
                     <p class="text-gray-300 mb-4">
                         A Python-based machine learning model to predict stock volatility using historical data and NLP sentiment analysis.
@@ -436,8 +442,8 @@
                     </div>
                 </div>
 
-                <!-- Low-Latency -->
-                <div class="project-card bg-gray-900/90 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 200ms;">
+                <!-- Low-Latency Trading -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 200ms;">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Low-Latency Trading System</h3>
                     <p class="text-gray-300 mb-4">
                         Engineered a backend for a simulated trading platform using Java and C++ for high-frequency data processing.
@@ -455,7 +461,7 @@
                 </div>
 
                 <!-- Blockchain Gateway -->
-                <div class="project-card bg-gray-900/90 p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 300ms;">
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 300ms;">
                     <h3 class="text-xl font-semibold mb-2 text-blue-400">Blockchain Payment Gateway</h3>
                     <p class="text-gray-300 mb-4">
                         A secure payment processing system using Ethereum smart contracts with React frontend and Node.js backend.
@@ -479,14 +485,299 @@
                     </div>
                 </div>
 
-                <!-- The rest of your project cards remain, only visually upgraded via CSS -->
-                <!-- I left their HTML as-is, so you can keep adding / editing freely -->
+                <!-- Cloud Migration Toolkit -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 400ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Cloud Migration Toolkit</h3>
+                    <p class="text-gray-300 mb-4">
+                        An automated tool for migrating on-premise applications to AWS with cost optimization and security compliance checks.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">AWS CDK</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Terraform</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
 
-                <!-- ... all your other project cards exactly as before ... -->
+                <!-- Real-time Chat App -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 500ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Real-time Chat Application</h3>
+                    <p class="text-gray-300 mb-4">
+                        A scalable chat application with WebSocket connections, message persistence, and end-to-end encryption.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Vue.js</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Socket.io</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Redis</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
 
-                <!-- For brevity I'm not re-pasting every single one;
-                     you can keep the remaining cards exactly from your original file
-                     under this same <section id="projects"> block. -->
+                <!-- MLOps Pipeline -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 600ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">MLOps Pipeline Framework</h3>
+                    <p class="text-gray-300 mb-4">
+                        End-to-end machine learning operations pipeline with automated training, deployment, and monitoring capabilities.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">MLflow</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Prometheus</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- IoT Device Management -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 700ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">IoT Device Management</h3>
+                    <p class="text-gray-300 mb-4">
+                        A platform for managing thousands of IoT devices with real-time monitoring, firmware updates, and data analytics.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">MQTT</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">TimescaleDB</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Computer Vision API -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 800ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Computer Vision API</h3>
+                    <p class="text-gray-300 mb-4">
+                        RESTful API for image recognition and object detection using deep learning models with FastAPI backend.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">FastAPI</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">PyTorch</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">OpenCV</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Microservices E-commerce -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 900ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Microservices E-commerce</h3>
+                    <p class="text-gray-300 mb-4">
+                        A distributed e-commerce platform with separate services for products, orders, payments, and user management.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Spring Boot</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">RabbitMQ</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">MongoDB</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Data Pipeline Orchestrator -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1000ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Data Pipeline Orchestrator</h3>
+                    <p class="text-gray-300 mb-4">
+                        A workflow management system for coordinating complex ETL processes across multiple data sources and destinations.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Airflow</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">PostgreSQL</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Serverless Image Processor -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1100ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Serverless Image Processor</h3>
+                    <p class="text-gray-300 mb-4">
+                        A cloud-native application for processing images on-demand with automatic scaling and cost-effective pricing.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">AWS Lambda</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">S3</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">CloudFront</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Portfolio Optimizer -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1200ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Portfolio Optimizer</h3>
+                    <p class="text-gray-300 mb-4">
+                        A financial tool that uses modern portfolio theory to optimize investment allocations based on risk tolerance.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Python</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">NumPy</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Matplotlib</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CI/CD Automation Suite -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1300ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">CI/CD Automation Suite</h3>
+                    <p class="text-gray-300 mb-4">
+                        A comprehensive toolset for automating software delivery pipelines with built-in quality gates and security scanning.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Jenkins</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Docker</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Kubernetes</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Natural Language API -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1400ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Natural Language API</h3>
+                    <p class="text-gray-300 mb-4">
+                        A service for text analysis including sentiment analysis, entity recognition, and language translation capabilities.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Flask</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">spaCy</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">NLTK</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile Fitness App -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1500ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Mobile Fitness App</h3>
+                    <p class="text-gray-300 mb-4">
+                        A cross-platform mobile application for tracking workouts, nutrition, and progress with social features.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">React Native</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Firebase</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Redux</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Distributed Cache System -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1600ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">Distributed Cache System</h3>
+                    <p class="text-gray-300 mb-4">
+                        A high-performance distributed caching solution with consistency guarantees and automatic failover capabilities.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Go</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Raft</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">gRPC</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- AR Navigation -->
+                <div class="project-card p-6 rounded-xl border border-gray-700 fade-in-section" style="transition-delay: 1700ms;">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-400">AR Navigation System</h3>
+                    <p class="text-gray-300 mb-4">
+                        An augmented reality navigation application for indoor spaces using computer vision and sensor fusion techniques.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">Unity</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">ARKit</span>
+                        <span class="bg-gray-800 text-gray-200 text-xs font-semibold px-2.5 py-1 rounded-full">C#</span>
+                    </div>
+                    <div class="mt-6 flex items-center space-x-4">
+                        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                            <i class="fas fa-external-link-alt mr-2"></i>Live Demo
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                            <i class="fab fa-github mr-2"></i>Source Code
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -494,11 +785,12 @@
         <section id="skills" class="content-section glass-surface p-8 rounded-2xl shadow-xl mb-12 border border-gray-700">
             <h2 class="text-3xl font-bold mb-8 text-white pb-2 text-gradient">My Tech Stack</h2>
             <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8">
-                <!-- Example tech icon (you can paste back your full icon list here) -->
+                <!-- Example tech icon; keep adding yours like before -->
                 <div class="tech-icon text-center">
                     <i class="fas fa-server text-6xl"></i>
                     <span class="tooltip">AWS EC2</span>
                 </div>
+                <!-- add your existing devicon icons back here if you want the full wall -->
             </div>
         </section>
 
@@ -592,7 +884,7 @@
         });
     </script>
 
-    <!-- AI Stock Prediction Demo script (unchanged) -->
+    <!-- AI Stock Prediction Demo script (guarded) -->
     <script>
       (function () {
         const btn = document.getElementById("run-ai-stock-demo");
